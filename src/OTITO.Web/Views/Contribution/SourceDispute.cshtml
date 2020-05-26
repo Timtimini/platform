@@ -1,0 +1,274 @@
+﻿@model OTITO.Web.Models.Topic.TopicViewModel
+@using System.Security.Claims;
+@{
+    bool admin = User.Identity.IsAuthenticated && User.FindFirst(ClaimTypes.Role).Value.ToString().ToLower().Equals("admin");
+}
+<div ng-app="Sources" ng-controller="ViewSources">
+
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#000;opacity:0.5;"
+         ng-show="processing">
+    </div>
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;"
+         ng-show="processing">
+
+        <div class="spinner-border" style="width: 3rem; height: 3rem; position:absolute;top:50%;left:50%; " role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+
+    <div class="container mainContainer">
+        <h1 class="trending_topics">@Model.TopicName</h1>
+        <div class="row button-row">
+
+            <button class="btn btn-default mr-20" onclick="window.location.href='/topic/@Model.Slug'">
+                View Topic
+            </button>
+            @*<button class="btn btn-default mr-20" onclick="window.location.href='/topic/counter/@Model.Slug'">
+                Editor View
+            </button>*@
+
+
+        </div>
+        @foreach (var item in Model.Claims)
+        {
+            <div class="row claim-row">
+                <div class="col-lg-2 right-border">
+                    <button class="btn round-button">
+                        MV
+                    </button><br>
+
+                </div>
+                <div class="col-lg-10 claim_head_cont">
+                    <h1 class="claim_head">
+                        @item.ClaimTitle
+                    </h1>
+
+                </div>
+            </div>
+        }
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="steps">
+                        <span class="highlighter"></span>
+                        View Sources
+                    </h2>
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="steps">
+                        <span class="highlighter"></span>
+                        Report a Source
+                    </h2>
+                </div>
+
+            </div>
+
+        <div class="row delegate mt-10">
+
+
+            <div class="col-lg-6" ng-repeat="source in Sources">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="source_round {{$index%2==0?'source_orange':'source_blue'}}" style="flex-direction:column">
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <img src="~/images/arrow_up.svg" width="20" style="margin-bottom:2px;cursor:pointer;"
+                                      />
+                                <div>{{source.Vote}}</div>
+                                <img src="~/images/arrow_down.svg" style="cursor:pointer;"
+
+                                     width="20" />
+                            }
+                            else
+                            {
+                                <img src="~/images/arrow_up.svg" width="20" style="margin-bottom:2px;cursor:pointer;opacity:0.5;cursor:not-allowed" />
+                                <div>{{source.Vote}}</div>
+                                <img src="~/images/arrow_down.svg" style="cursor:pointer;opacity:0.5;cursor:not-allowed"
+                                     width="20" />
+                            }
+
+                        </div>
+
+                    </div>
+                    <div class="col-lg-8">
+                        <h1 class="source_name">
+                            {{source.Title}}
+
+                            @if (admin)
+                            {
+                                <button class="btn btn-default" ng-click="deleteSource(source.Id)">
+                                    <i class="fa fa-times-circle"
+                                       onclick=""></i>
+
+                                    Delete Source
+                                </button>
+
+                            }
+
+                        </h1>
+                        <p class="source_text">
+                            {{source.URL}}
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <form method="post" action="/topic/adddispute">
+                    @Html.HiddenFor(x => Model.Dispute.SourceTitle)
+                    @Html.HiddenFor(x => Model.Dispute.ClaimSlug)
+                    @Html.HiddenFor(x => Model.Dispute.TopicSlug)
+                    @Html.HiddenFor(x => Model.Dispute.SourceSlug)
+                    @Html.HiddenFor(x => Model.Dispute.SourceURL)
+                    <div class="row delegate">
+
+
+
+                        <div class="large-input col-lg-12">
+                            @Html.EditorFor(x => Model.Dispute.Title, new { htmlAttributes = new { @style = "width:100%", placeholder = "What's wrong with this source" } })
+
+                        </div>
+                        <div style="color: red; font-size: 14px;">
+                            @Html.ValidationMessageFor(x => Model.Dispute.Title)
+                        </div>
+
+                    </div>
+                    <div class="row delegate mt-10">
+                        <div class="large-input col-lg-12">
+                            @Html.EditorFor(x => Model.Dispute.Source, new { htmlAttributes = new { @style = "width:100%", placeholder = "How can we check that what you're saying is true?" } })
+                            @*<input type="text" style="width:100%" placeholder="How can we check that what you're saying is true?">*@
+                        </div>
+                        <div style="color: red; font-size: 14px;">
+                            @Html.ValidationMessageFor(x => Model.Dispute.Source)
+                        </div>
+                    </div>
+                    <div class="row delegate">
+                        <button type="submit" class="btn btn-default mr-20">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+    var app = angular.module('Sources', []);
+    app.controller('ViewSources', ['$scope','$http','$timeout','$interval',function($scope, $http, $timeout, $interval) {
+    $scope.new_source='';
+    $scope.gotoURL=function(val)
+    {
+        window.location.href='@Url.Action("TopicSimpleView","Contribution")?TopicId='+val;
+    }
+    $scope.Sources = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Claims.FirstOrDefault().Sources)))
+    $scope.deleteSource=function(Id)
+    {
+        window.location.href='@Url.Action("DeleteSource")?TopicId=@Model.Id&ClaimId=@Model.Claims.FirstOrDefault().Id&SourceId='+Id;
+    }
+    $scope.addVote=function(val,Id)
+    {
+
+    $scope.processing=true;
+        $http({
+        url: '@Url.Action("AddVote")?TopicId=@Model.Id&ClaimId=@Model.Claims.FirstOrDefault().Id&SourceId='+Id+'&Vote='+val,
+        method: "GET"
+    })
+    .then(function(response) {
+    console.log(response);
+        $scope.processing=false;
+
+    if(response.data.success)
+    {
+        var source = $scope.Sources.filter(x=>x.Id==Id)[0];
+    source.Vote=response.data.vote;
+    }
+    else
+    {
+        alert(response.data.message);
+    }
+
+
+    },
+    function(response) { // optional
+            // failed
+    $scope.processing=false;
+    alert('Unable to post the data at the moment. Please try again later.');
+    });
+    }
+
+    $interval(function(){
+
+
+
+    $http({
+        url: '@Url.Action("GetVote")?ClaimId=@Model.Claims.FirstOrDefault().Id',
+        method: "GET"
+    })
+    .then(function(response) {
+
+
+    for(var i=0;i<response.data.data.length;i++)
+
+    {
+
+           var source = $scope.Sources.filter(x=>x.Id==$scope.Sources[i].Id)[0];
+        source.Vote=response.data.data[i].vote;
+
+
+
+    }
+
+
+    },
+    function(response) { // optional
+
+
+    });
+
+    },1000);
+
+
+    $scope.addSource=function(new_source)
+    {
+    console.log($scope.new_source);
+    $scope.processing=true;
+    $http({
+        url: '@Url.Action("AddSource")?ClaimId=@Model.Claims.FirstOrDefault().Id&Source='+$scope.new_source,
+        method: "GET"
+    })
+    .then(function(response) {
+    console.log(response);
+    $scope.processing=false;
+        if(response.data.success)
+    {
+        $scope.Sources.push({Id:response.data.data,Title:'Source '+($scope.Sources.length+1),URL:$scope.new_source,Vote:0})
+    $scope.new_source='';
+    }
+    else
+    {
+        alert("There was an error posting the data");
+    }
+
+
+
+    },
+    function(response) { // optional
+
+    $scope.processing=false;
+    alert("There was an error posting the data");
+    });
+
+    }
+
+
+    }]);
+
+</script>

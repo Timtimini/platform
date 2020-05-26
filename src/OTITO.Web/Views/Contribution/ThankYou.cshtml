@@ -1,0 +1,78 @@
+﻿@model OTITO.Web.Models.Topic.TopicModel
+<div class="container mainContainer">
+    <h1 class="trending_topics">
+      Thank you for setting the truth free.
+    </h1>
+    <div class="row delegate" style="margin-left:10px;">
+
+        <p class="help-text col-lg-10" style="background:none;padding-left:0">
+            Thank you for helping society discover the truth about this topic. To keep this platform  as representative
+    as possible—and our perception of the truth as accurate as possible—share your thesis with friends.
+    Ask them to contribute claims and sources too!
+        </p>
+        <div class="col-lg-2">
+            <button class="btn btn-default min-width-120 simpleViewbtn" onclick="window.location.href='/topic/@Model.Slug'">
+                View Topic
+              </button>
+              <button class="btn btn-default min-width-120 counterMobile" onclick="window.location.href='/topic/@Model.Slug'">
+                View Topic
+              </button>
+        </div>
+        
+
+    </div>
+   
+    <div class="row claim-row">
+        <div class="col-lg-2 right-border">
+           <img src="~/images/facebook_share_icon.png" style="margin-top:10px;
+           border-radius:100px;
+           -webkit-box-shadow: 0px 10px 21px 0px rgba(186,208,228,1);
+-moz-box-shadow: 0px 10px 21px 0px rgba(186,208,228,1);
+box-shadow: 0px 10px 21px 0px rgba(186,208,228,1);" />
+        </div>
+        <div class="col-lg-10 claim_head_cont">
+          <p class="help-text" style="margin:0px;background:none;padding-left:0">
+              Please share evidence that reveals the truth about this topic:
+          </p>
+          <h1 class="claim_head2">
+              “@Model.TopicName”—via Otito platform 
+          </h1>
+            <button class="sharer btn btn-success mr-20 min-width-120"
+                    data-sharer="facebook"
+                    data-title="@Model.TopicName"
+                    data-url="http://www.otito.io/topic/@Model.Slug">
+                Share
+            </button>
+           
+        </div>
+      </div>
+
+      <div class="row claim-row">
+          <div class="col-lg-2 right-border">
+             <img src="~/images/twitter_share_icon.png" style="margin-top:10px;
+             border-radius:100px;
+             -webkit-box-shadow: 0px 10px 21px 0px rgba(181,228,246,1);
+-moz-box-shadow: 0px 10px 21px 0px rgba(181,228,246,1);
+box-shadow: 0px 10px 21px 0px rgba(181,228,246,1);
+
+             " />
+          </div>
+          <div class="col-lg-10 claim_head_cont">
+            <p class="help-text" style="margin:0px;background:none;padding-left:0">
+                Please share evidence that reveals the truth about this topic:
+            </p>
+            <h1 class="claim_head2">
+                “@Model.TopicName”—via Otito platform
+            </h1>
+              <button class="sharer btn btn-success mr-20 min-width-120"
+                    data-sharer="twitter"
+                    data-title="@Model.TopicName"
+                    data-url="http://www.otito.io/topic/@Model.Slug">
+                Share
+            </button>
+             
+          </div>
+        </div>
+  
+
+  </div>

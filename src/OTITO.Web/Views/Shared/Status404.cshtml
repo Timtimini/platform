@@ -1,0 +1,109 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+<style>
+
+    /*======================
+    404 page
+=======================*/
+
+
+    .page_404 {
+        padding: 100px 0 40px 0;
+        background: #fff;
+        font-family: 'Avenir LT Std 65 Medium', serif;
+    }
+
+        .page_404 img {
+            width: 100%;
+        }
+
+    .four_zero_four_bg {
+        background-image: url(/images/dribbble_1.gif);
+        background-repeat:no-repeat;
+         height: 400px;
+        background-position: center;
+    }
+
+
+        .uis {
+            font-size: 35px;
+            font-family: 'Avenir LT Std 95 Black'
+        }
+
+        .four_zero_four_bg h3 {
+            font-size: 80px;
+        }
+
+    .link_404 {
+        color: #fff !important;
+        padding: 10px 20px;
+        background: #39ac31;
+        margin: 20px 0;
+        display: inline-block;
+    }
+
+    .contant_box_404 {
+        margin-top: -50px;
+    }
+    ul.checkpoints {
+        width: 500px;
+        text-align: left;
+        margin: 13px auto;
+    }
+</style>
+<section class="page_404">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 ">
+                <div class="col-sm-10 col-sm-offset-1  text-center">
+                    <h1 class="text-center uis">The page you’re looking for appears to be missing…</h1>
+                    <div class="four_zero_four_bg">
+
+
+
+                    </div>
+
+                    <div class="contant_box_404">
+
+                        @*<h3 class="h2">
+                            Unfortunately, this happens sometimes. But, here’s a few things we think might help in this situation:
+                        </h3>*@
+                        <p>
+                            Unfortunately, this happens sometimes. But, here’s a few things we think might help in this situation:
+                        </p>
+                        <ul class="checkpoints">
+                            <li>
+                                <a href="https://www.otito.io/">View all topics</a>  and search for those on issues you care about
+                            </li>
+                            <li>
+                                <a href="https://www.otito.io/topic/addtopic">Add a topic</a> and ask your network to add claims to it
+                            </li>
+                            <li>
+                                <a href="https://www.otito.io/home/contact">Send us a message</a> 
+                            </li>
+                        </ul>
+
+                        <p>We hope this helps but let us know if not :)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@*@if (Model.ShowRequestId)
+{
+<p>
+    <strong>Request ID:</strong> <code>@Model.RequestId</code>
+</p>
+}
+
+<h3>Development Mode</h3>
+<p>
+    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+</p>
+<p>
+    <strong>Development environment should not be enabled in deployed applications</strong>, as it can result in sensitive information from exceptions being displayed to end users. For local debugging, development environment can be enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>, and restarting the application.
+</p>*@

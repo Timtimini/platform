@@ -1,0 +1,458 @@
+﻿@model OTITO.Web.Models.Topic.TopicViewModel
+@using System.Security.Claims;
+@{
+    bool admin = User.Identity.IsAuthenticated && User.FindFirst(ClaimTypes.Role).Value.ToString().ToLower().Equals("admin");
+}
+<div ng-app="Sources" ng-controller="ViewSources">
+
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#000;opacity:0.5;"
+         ng-show="processing">
+    </div>
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;"
+         ng-show="processing">
+
+        <div class="spinner-border" style="width: 3rem; height: 3rem; position:absolute;top:50%;left:50%; " role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+
+    <div class="container mainContainer">
+        @*@if (TempData["Exception"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Exception"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+}
+        @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+}
+        @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+}*@
+        <h1 class="trending_topics">@Model.TopicName</h1>
+        <div class="row button-row">
+
+            @*<button class="btn btn-default mr-20 simpleViewvs" onclick="window.location.href='/topic/simple/@Model.Slug'">
+                Simple View
+            </button>*@
+            <button class="btn btn-default mr-20 showCounterClaimvs" onclick="window.location.href='/topic/@Model.Slug'">
+                View Topic
+            </button>
+            <button class="btn btn-default mr-20 viewTopic" onclick="window.location.href='/topic/@Model.Slug'">
+                View Topic
+            </button>
+
+
+        </div>
+        @foreach (var item in Model.Claims)
+    {
+        <div class="row claim-row">
+            <div class="col-lg-2 right-border">
+
+                    @if (item.isMostValidated && item.CounterClaims.Count>0)
+    {
+                <span class="m_claimTitle">
+                    <span>Most Validated</span>
+                </span>
+                <button class="btn round-button tip d_claimTitle">
+                    MV
+                    <span class="tooltiptext">Most Validated</span>
+                     </button>
+
+                    }
+                    else if(item.CounterClaims.Count==0 && item.isMostValidated)
+                    {
+                <span class="m_claimTitle">
+                    <span>Unchallenged Claim</span>
+                </span>
+                <button class="btn round-button tip d_claimTitle">
+                    UC
+                    <span class="tooltiptext">Unchallenged Claim</span>
+                </button>
+                    }
+                    else
+                    {
+                <span class="m_claimTitle">
+                    <span>Less Validated</span>
+                </span>
+                <button class="btn round-button tip d_claimTitle">
+                    LV
+                    <span class="tooltiptext">Less Validated</span>
+                </button>
+                    }
+
+                    <br>
+                    <span class="claim">Claim</span>
+
+</div>
+            <div class="col-lg-10 claim_head_cont">
+                <h1 class="claim_head">
+                    @item.ClaimTitle
+
+                        <div class="showInlineExpand" >
+                            <img src="~/images/down_large_arrow.svg" width="30"
+                                 class="showDescription" id="down-@item.Id" onclick="showHelp(@item.Id)"
+                                 height="30" />
+                            <img src="~/images/up_large_arrow.svg" width="30"
+                                 class="showDescription" id="up-@item.Id" style="display:none; " onclick="showHelp(@item.Id)"
+                                 height="30" />
+                        </div>
+                </h1>
+                <div class="expandClaim" style="position:absolute;right:-19px;top:-21px;cursor:pointer">
+                    <img src="~/images/down_large_arrow.svg" width="30"
+                         class="showDescription" id="down-@item.Id" onclick="showHelp(@item.Id)"
+                         height="30" />
+                    <img src="~/images/up_large_arrow.svg" width="30"
+                         class="showDescription" id="up-@item.Id" style="display:none; " onclick="showHelp(@item.Id)"
+                         height="30" />
+                </div>
+                <p class="help-text delegate" style="margin-left:0px;display:none;" id="help-@item.Id">
+                    @item.ClaimDescription
+                </p>
+            </div>
+        </div>
+}
+
+        <h2 class="steps">
+            <span class="highlighter"></span>
+            View Sources
+        </h2>
+
+        <div class="row delegate mt-10">
+
+
+            <div class="col-lg-6" ng-repeat="source in Sources">
+                <div class="row">
+                    <div class="col-lg-2 ">
+                        <div class="source_round inlineMfloat {{$index%2==0?'source_orange':'source_blue'}}" style="flex-direction:column">
+
+                            @if (User.Identity.IsAuthenticated)
+                        {
+                            <img src="~/images/arrow_up.svg" width="20" style="margin-bottom:2px;cursor:pointer;"
+                                 ng-click="addVote(1,source.Id)" />
+                            <div>{{source.Vote}}</div>
+                            <img src="~/images/arrow_down.svg" style="cursor:pointer;"
+                                 ng-click="addVote(-1,source.Id)"
+                                 width="20" />
+                    }
+                    else
+                    {
+                        <img
+                             data-toggle="modal" data-target="#alertModal"
+                          src="~/images/arrow_up.svg" width="20" style="margin-bottom:2px;cursor:pointer;opacity:0.5;" />
+                        <div>{{source.Vote}}</div>
+                        <img src="~/images/arrow_down.svg" style="cursor:pointer;opacity:0.5;"
+                             data-toggle="modal" data-target="#alertModal"
+                             width="20" />
+                }
+
+
+                        </div>
+                         <p class="source_text inlineM" style="overflow-x: auto; white-space: nowrap; height: 42px;">
+                            <a href="#" ng-click="getFullURL(source.URL)"> {{source.URL}} </a>
+                        </p>
+
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="source_karma">
+                            <div class="source_positive_karma tip" ng-style="{'width':'{{source.PositiveKarma}}%'}">
+                                <span class="tooltiptext">
+                                    Positive karma of source submitter. The higher this is, the more reliable their sources have proven to be.
+                                </span>
+                            </div>
+                            <div class="source_negative_karma tip" ng-style="{'width':'{{source.NegativeKarma}}%'}">
+
+                                <span class="tooltiptext" >
+                                    Negative karma of source submitter. The higher this is, the more unreliable their sources have proven to be.
+                                </span>
+                            </div>
+                            <div class="clearFix"></div>
+                        </div>
+                        <h1 class="source_name">
+                            @if (admin)
+    {
+                        <button class="btn btn-default" ng-click="deleteSource(source.Slug)">
+                            <i class="fa fa-times-circle"
+                               onclick=""></i>
+
+                            Delete Source
+                        </button>
+
+}
+
+                        </h1>
+                        <p class="source_text col-lg-12 outlineMainurl" style="overflow-x:auto;white-space:nowrap;height:42px;">
+                            <a href="#" ng-click="getFullURL(source.URL)"> {{source.URL}} </a>
+                        </p>
+                    </div>
+                    @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="col-lg-2 addDispute mobileHide">
+                        <button ng-click="AddDispute(source.Slug)" class="btn btn-danger mt-20 mobileHide">
+                            Dispute
+                        </button>
+                    </div>
+            }
+            else
+            {<div class="col-lg-2 mobileHide">
+                    <button class="btn btn-danger mt-20" style="opacity:0.5;"
+                            data-toggle="modal" data-target="#alertModal"
+                    >
+                        Dispute
+                    </button>
+                </div>
+
+        }
+                </div>
+            </div>
+
+
+
+        </div>
+        @if (User.Identity.IsAuthenticated)
+    {
+
+
+        <div class="row delegate mt-10">
+
+            <div class="large-input  col-lg-5">
+                <input type="text" name="new_source" ng-model="new_source" style="width:100%" placeholder="Please enter a source">
+            </div>
+
+
+            <div class="col-lg-4">
+                <button ng-click="addSource(new_source)" class="btn btn-success">
+                    Add a Source
+                </button>
+                 <img src="~/images/question-mark.svg" width="40" height="40" class="question-mark qmvs" ng-click="showHelp_3()" />
+            </div>
+
+        </div>
+
+<div ng-style="hgt">
+
+
+                        <p class="help-text ivoryHelp delegate" ng-show="help_3">
+                        Sources are key in the world of òtító—they let us know which information to trust and which to disbelieve.<br /><br />
+
+                        Add links to sources that prove the claim you’ve made is factually correct.
+                        Or, if you agree that a claim added by someone else is factually correct,
+                        you can add a source to their claim (each claim can be supported by more than one source). <br /><br />
+
+                        Always check sources in claims. If the sources are deceptive or unreliable,
+                        downvote them—this gives poor quality claims less visibility.
+                        If the sources are reliable and lay out the facts clearly, upvote them as this increases the visibility of
+                        the claims to which they’re attached.
+
+
+                    </p>
+
+
+
+                </div>
+
+}
+
+    </div>
+
+</div>
+
+<div class="modal" id="alertModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Alert</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Please sign up or log in by clicking “JOIN” in the navigation bar, to vote and add topics or claims.
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    var app = angular.module('Sources', []);
+    app.controller('ViewSources', ['$scope','$http','$timeout','$interval','$window',function($scope, $http, $timeout, $interval,$window) {
+    $scope.new_source='';
+
+    $scope.getFullURL=function(val)
+    {
+
+    var http= val.indexOf("http://");
+    var https= val.indexOf("https://");
+
+    if(http===0 || https===0)
+    {
+    $window.open(val, '_blank');
+    }
+    else
+    {
+    $window.open("http://"+val, '_blank');
+    }
+
+
+    }
+
+    $scope.help_3=false;
+    $scope.hgt = { height: 0 + 'px' };
+    $scope.showHelp_3=function()
+    {
+        $scope.help_3=$scope.help_3==true?false:true;
+    if($scope.help_3)
+    {
+    $scope.hgt = { height: 244 + 'px' };
+    }
+    else
+    {
+    $scope.hgt = { height: 0 + 'px' };
+    }
+    }
+
+    $scope.gotoURL=function(val)
+    {
+        window.location.href='@Url.Action("TopicSimpleView","Contribution")?TopicId='+val;
+    }
+    $scope.Sources = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Claims.FirstOrDefault().Sources)))
+    $scope.deleteSource=function(slug)
+    {
+        window.location.href='/topic/deletesource/'+slug+'/@Model.Claims.FirstOrDefault().Slug';
+    }
+    $scope.AddDispute=function(Id)
+    {
+        window.location.href='/topic/dispute/'+Id;
+    }
+    $scope.addVote=function(val,Id)
+    {
+
+    $scope.processing=true;
+        $http({
+        url: '@Url.Action("AddVote")?TopicId=@Model.Id&ClaimId=@Model.Claims.FirstOrDefault().Id&SourceId='+Id+'&Vote='+val,
+        method: "GET"
+    })
+    .then(function(response) {
+    console.log(response);
+        $scope.processing=false;
+
+    if(response.data.success)
+    {
+        var source = $scope.Sources.filter(x=>x.Id==Id)[0];
+        source.Vote=response.data.vote;
+    }
+    else
+    {
+        alert(response.data.message);
+    }
+
+
+    },
+    function(response) { // optional
+            // failed
+    $scope.processing=false;
+    alert('Unable to post the data at the moment. Please try again later.');
+    });
+    }
+
+    $interval(function(){
+
+
+
+    $http({
+        url: '@Url.Action("GetVote")?ClaimId=@Model.Claims.FirstOrDefault().Id',
+        method: "GET"
+    })
+    .then(function(response) {
+
+
+    for(var i=0;i<response.data.data.length;i++)
+
+    {
+
+        var source = $scope.Sources.filter(x=>x.Id==$scope.Sources[i].Id)[0];
+        source.Vote=response.data.data[i].vote;
+        source.PositiveKarma=response.data.data[i].Positivekarma;
+        source.NegativeKarma=response.data.data[i].NegativeKarma;
+
+
+    }
+
+
+    },
+    function(response) { // optional
+
+
+    });
+
+  },3000);
+
+
+    $scope.addSource=function(new_source)
+    {
+    if(new_source.length===0)
+    {
+        alert("Please enter valid source");
+    return;
+    }
+    $scope.processing=true;
+    $http({
+        url: '/topic/addsource?slug=@Model.Claims.FirstOrDefault().Slug&Source='+$scope.new_source,
+        method: "GET"
+    })
+    .then(function(response) {
+    console.log(response);
+    $scope.processing=false;
+        if(response.data.success)
+    {
+        $scope.Sources.push({Slug:response.data.slug,Title:'Source '+($scope.Sources.length+1),URL:$scope.new_source,Vote:0})
+    $scope.new_source='';
+    }
+    else
+    {
+        alert("There was an error posting the data");
+    }
+
+
+
+    },
+    function(response) { // optional
+
+    $scope.processing=false;
+    alert("There was an error posting the data");
+    });
+
+    }
+
+
+    }]);
+
+
+
+</script>
+}

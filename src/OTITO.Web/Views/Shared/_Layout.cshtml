@@ -1,0 +1,772 @@
+﻿@using System.Security.Claims;
+
+@{
+    var Version = "2.1.1.73";
+
+    var description = ViewBag.Description;
+    var title = ViewBag.Title == "Home Page" ? "òtító | a platform for fighting misinformation" : ViewBag.Title;
+    bool admin = User.Identity.IsAuthenticated && (User.FindFirst(ClaimTypes.Role)?.Value.ToString().ToLower().Equals("admin") ?? false);
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google Tag Manager -->
+    <script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-59QJ29P');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="@description">
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="@title" />
+    <meta property="fb:app_id" content="695016410913459" />
+    <meta property="og:description" content="@description" />
+    <meta name="author" content="Afraz">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta property="og:image" content="https://www.otito.io/images/responsive_logo.png">
+    <link rel="shortcut icon" href="~/images/otito.ico" type="image/x-icon">
+    <link rel="icon" href="~/images/otito.ico" type="image/x-icon">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-136520427-1"></script>
+    <script>
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){dataLayer.push(arguments);}
+ gtag('js', new Date());
+
+ gtag('config', 'UA-136520427-1');
+    </script>
+    <style>
+        #searchTopic {
+            cursor: pointer;
+        }
+        .noShadow {
+            box-shadow: 0px 0px 0px 0px rgba(199,244,225,1) !important;
+            -webkit-box-shadow: 0px 0px 0px 0px rgba(199,244,225,1) !important;
+        }
+    </style>
+    @*òtító | a platform for documenting and sharing truth*@
+    <title>@title</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" type="text/css"
+              href="~/css/fonts/fonts.css?v=@Version" />
+        <link href="~/css/bootstrap.min.css?v=@Version" rel="stylesheet">
+        <link href="~/css/nav-bar.css?v=@Version" rel="stylesheet">
+        <link href="~/css/MobileMenu.css?v=@Version" rel="stylesheet">
+        <link href="~/css/custom.css?v=@Version" rel="stylesheet">
+
+        <script src="~/js/jquery-3.3.1.slim.min.js?v=@Version"></script>
+        <script src="~/js/bootstrap.bundle.min.js?v=@Version"></script>
+        @*<script src="~/js/Custom.js"></script>*@
+
+        <script src="~/js/angular.min.js?v=@Version"></script>
+        <script src="~/js/moment.min.js?v=@Version"></script>
+        <script src="~/js/angular-moment.js?v=@Version"></script>
+        <script src="~/js/ui-bootstrap-tpls.js?v=@Version"></script>
+        <script src="~/js/angular-modal-service.js?v=@Version"></script>
+        <script src="~/js/sharer.min.js?v=@Version"></script>
+
+        <!-- Facebook Pixel Code -->
+        <script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2134026646911493');
+fbq('track', 'PageView');
+        </script>
+        <noscript>
+            <img height="1" width="1"
+                 src="https://www.facebook.com/tr?id=2134026646911493&ev=PageView
+&noscript=1" />
+        </noscript>
+        <!-- End Facebook Pixel Code -->
+        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+            <link rel="stylesheet" href="~/css/site.css" />*@
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" type="text/css"
+              href="~/css/fonts/fonts.css?v=@Version" />
+        <link href="~/css/bootstrap.min.css?v=@Version" rel="stylesheet">
+        <link href="~/css/nav-bar.css?v=@Version" rel="stylesheet">
+        <link href="~/css/MobileMenu.css?v=@Version" rel="stylesheet">
+        <link href="~/css/custom.css?v=@Version" rel="stylesheet">
+
+        <script src="~/js/jquery-3.3.1.slim.min.js?v=@Version"></script>
+        <script src="~/js/bootstrap.bundle.min.js?v=@Version"></script>
+        @*<script src="~/js/Custom.js"></script>*@
+
+        <script src="~/js/angular.min.js?v=@Version"></script>
+        <script src="~/js/moment.min.js?v=@Version"></script>
+        <script src="~/js/angular-moment.js?v=@Version"></script>
+        <script src="~/js/ui-bootstrap-tpls.js?v=@Version"></script>
+        <script src="~/js/angular-modal-service.js?v=@Version"></script>
+        <script src="~/js/sharer.min.js?v=@Version"></script>
+
+        <!-- Facebook Pixel Code -->
+        <script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2134026646911493');
+fbq('track', 'PageView');
+        </script>
+        <noscript>
+            <img height="1" width="1"
+                 src="https://www.facebook.com/tr?id=2134026646911493&ev=PageView
+&noscript=1" />
+        </noscript>
+        <!-- End Facebook Pixel Code -->
+        @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+                  asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+                  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+            <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />*@
+    </environment>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59QJ29P"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    @*<nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">OTITO.Web</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>*@
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light noPadding" id="maincontainernav">
+        <div class="container navPadding">
+
+
+            <a class="navbar-brand mr-auto mr-lg-0 logo" href="/">
+                <img src="~/images/logo.png" width="120" />
+            </a>
+            @*<button class="navbar-toggler p-0 border-0" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>*@
+
+            <a class="nav-button ml-auto mr-4"><span id="nav-icon3"><span></span><span></span><span></span><span></span></span></a>
+
+            <div class="fixed-top main-menu">
+                <div class="flex-center p-5">
+                    <ul class="nav flex-column">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            if (ViewContext.RouteData.Values["Action"].ToString() == "Signup")
+                            {
+                                <li class="nav-item delay-2">
+                                    <a class="nav-link nav-active joinPop btn btn-success noShadow" href="#" data-toggle="modal" data-target="#joinModal">JOIN</a>
+
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item delay-2">
+                                    <a class="nav-link joinPop btn btn-success noShadow" href="#" data-toggle="modal" data-target="#joinModal">JOIN</a>
+                                </li>
+                            }
+                        }
+                        <li class="nav-item delay-1">
+                            @if (Context.Request.Path.Equals("/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20"))
+                            {
+                                <a class="nav-link nav-active" href="/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20">HOW IT WORKS</a>
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20">HOW IT WORKS</a>
+                            }
+
+                        </li>
+                        <li class="nav-item delay-1 sp_elem">
+                            @if ((ViewContext.RouteData.Values["Action"].ToString() == "Index"
+|| (!User.Identity.IsAuthenticated && ViewContext.RouteData.Values["Controller"].ToString() == "Contribution")
+
+) && !Context.Request.Path.Equals("/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20"))
+                            {
+
+                                <a class="nav-link nav-active nav-button" href="#trending_topics" id="">TOPICS</a>
+
+
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="/">TOPICS</a>
+
+                            }
+                        </li>
+                        <li class="nav-item delay-1">
+                            @*@if (User.Identity.IsAuthenticated)
+                                {*@
+
+                            @if (ViewContext.RouteData.Values["Action"].ToString() == "addtopic")
+                            {
+                                <a class="nav-link nav-active" href="@Url.Action("addContribution","Contribution")">ADD TOPIC</a>
+
+
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="@Url.Action("addContribution","Contribution")">ADD TOPIC</a>
+
+                            }
+                            @* } *@
+
+                        </li>
+
+
+
+
+                        <li class="nav-item delay-3">
+                            @if (ViewContext.RouteData.Values["Action"].ToString() == "About")
+                            {
+                                <a class="nav-link nav-active" href="@Url.Action("About","Home")">ABOUT</a>
+
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="@Url.Action("About","Home")">ABOUT</a>
+                            }
+
+                        </li>
+                        <li class="nav-item delay-4">
+                            @if (ViewContext.RouteData.Values["Action"].ToString() == "Contact")
+                            {
+                                <a class="nav-link nav-active" href="@Url.Action("Contact","Home")">CONTACT</a>
+
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="@Url.Action("Contact","Home")">CONTACT</a>
+                            }
+
+                        </li>
+                        <li class="nav-item delay-5">
+                            @if (ViewContext.RouteData.Values["Action"].ToString() == "Donate")
+                            {
+                                <a class="nav-link nav-active" href="@Url.Action("Donate","Home")">DONATE</a>
+
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="@Url.Action("Donate","Home")">DONATE</a>
+                            }
+
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item delay-6"><a class="nav-link" href="#">User</a></li>
+                            <li class="nav-item delay-7" style="padding-left:50px;">
+                                @if (ViewContext.RouteData.Values["Action"].ToString() == "Profile")
+                                {
+                                    <a class="nav-link nav-active" href="@Url.Action("Profile","Users")">
+                                        &rarr;
+                                        Manage Profile
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link" href="@Url.Action("Profile","Users")">
+                                        &rarr;
+                                        Manage Profile
+                                    </a>
+                                }
+
+                            </li>
+                            <li class="nav-item delay-8" style="padding-left:50px;">
+                                <a class="nav-link" href="@Url.Action("Logout","Users")">
+                                    &rarr; Logout
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div> <!--main-menu end-->
+
+            <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+                <div class="mr-auto"></div>
+
+                <form class="form-inline my-2 my-lg-0">
+                    <ul class="navbar-nav mr-auto">
+                        @if (Context.Request.Path.Equals("/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20"))
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20">HOW IT WORKS</a>
+                                <span class="navHighlightBottom"></span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20">HOW IT WORKS</a>
+                            </li>
+                        }
+
+
+                        @if ((ViewContext.RouteData.Values["Action"].ToString() == "Index"
+|| (!User.Identity.IsAuthenticated && ViewContext.RouteData.Values["Controller"].ToString() == "Contribution")
+
+) && !Context.Request.Path.Equals("/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20"))
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#trending_topics">TOPICS</a>
+                                <span class="navHighlightBottom"></span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">TOPICS</a>
+                            </li>
+                        }
+
+
+
+                        @*@if (User.Identity.IsAuthenticated)
+                            {*@
+
+                        @if (ViewContext.RouteData.Values["Action"].ToString() == "addtopic")
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link"
+                                   href="@Url.Action("addContribution","Contribution")">ADD TOPIC</a>
+                                <span class="navHighlightBottom"></span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="@Url.Action("addContribution","Contribution")">ADD TOPIC</a>
+
+                            </li>
+                        }
+
+                        @*}*@
+
+
+                        @if (ViewContext.RouteData.Values["Action"].ToString() == "About")
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("About","Home")">ABOUT</a>
+                                <span class="navHighlightBottom"></span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("About","Home")">ABOUT</a>
+
+                            </li>
+                        }
+                        @if (ViewContext.RouteData.Values["Action"].ToString() == "Contact")
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("Contact","Home")">CONTACT</a>
+                                <span class="navHighlightBottom"></span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Contact","Home")">CONTACT</a>
+                            </li>
+                        }
+
+                        @if (ViewContext.RouteData.Values["Action"].ToString() == "Donate")
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("Donate","Home")">DONATE</a>
+                                <span class="navHighlightBottom"></span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Donate","Home")">DONATE</a>
+                            </li>
+                        }
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown ">
+                                <a class="nav-link profile" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
+                                   aria-expanded="false">
+                                    <img src="~/images/user_icon_main.svg" width="20" height="20" style="margin-top:7px" />
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown01">
+
+                                    <a class="dropdown-item" href="@Url.Action("Profile","Users")">Manage Profile</a>
+
+                                    @if (admin)
+                                    {
+                                        <a class="dropdown-item" href="@Url.Action("Statistics","Users")">Statistics</a>
+                                    }
+                                    <a class="dropdown-item" href="@Url.Action("Logout","Users")">Logout</a>
+                                </div>
+                            </li>
+                        }
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            if (ViewContext.RouteData.Values["Action"].ToString() == "Signup")
+                            {
+                                <li class="nav-item active">
+                                    <a class="btn btn-success" style="margin-top: -4px;" href="#" data-toggle="modal" data-target="#joinModal">JOIN</a>
+                                    <span class="navHighlightBottom"></span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="btn btn-success" style="margin-top: -4px;" href="#" data-toggle="modal" data-target="#joinModal">JOIN</a>
+
+                                </li>
+                            }
+
+                        }
+
+                    </ul>
+
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    @*<partial name="_CookieConsentPartial" />*@
+
+    <div class="" style="min-height:100%;
+   position:relative;" id="mainContainerBody">
+        <div style="padding-bottom:122px;">
+            @RenderBody()
+        </div>
+
+        @{
+            await Html.RenderPartialAsync("_partialFooter");
+        }
+    </div>
+    @{
+        await Html.RenderPartialAsync("_registerPartial");
+
+    }
+    @{
+        await Html.RenderPartialAsync("_CookieConsentPartial");
+    }
+    @{
+        await Html.RenderPartialAsync("_partialResponsive");
+    }
+
+    <environment include="Development">
+        @*<script src="~/js/jquery-3.3.1.slim.min.js"></script>
+            <script src="~/js/bootstrap.bundle.min.js"></script>*@
+        <script src="~/js/Custom.js?v=@Version"></script>
+
+        @*<script src="~/lib/jquery/dist/jquery.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>*@
+
+        <!-- Start of HubSpot Embed Code -->
+        <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6019738.js"></script>
+        <!-- End of HubSpot Embed Code -->
+        <script async>(function(s,u,m,o,j,v){j=u.createElement(m);v=u.getElementsByTagName(m)[0];j.async=1;j.src=o;j.dataset.sumoSiteId='8fa8d478cbced171fa04c57c1f04ca2286a114b065c71dfb397868a8f42051bd';v.parentNode.insertBefore(j,v)})(window,document,'script','//load.sumo.com/');</script>
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-auth.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#config-web-app -->
+
+        <script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBKNgNeoW_afQ0DkdIuVQ57zTqrDzed8Wo",
+    authDomain: "openotito.firebaseapp.com",
+    databaseURL: "https://openotito.firebaseio.com",
+    projectId: "openotito",
+    storageBucket: "",
+    messagingSenderId: "1052374084269",
+    appId: "1:1052374084269:web:7ced29c5c895f72b"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+            function loginWithFacebook(e,b){
+            e.preventDefault();
+      const provider = b===1?new firebase.auth.FacebookAuthProvider():new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+      .then(result=>{
+          const user = result.user;
+          console.log(`Hello ${user.displayName} ${user.email} ${user.uid}`);
+          console.log(user);
+
+            document.getElementById('uid').value=user.uid;
+             console.log(document.getElementById('uid').value);
+
+            document.getElementById("processing").style.display="block";
+            document.getElementById("processing_loader").style.display="block";
+
+
+
+
+            var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+        var result = JSON.parse(xhr.responseText);
+            if(result.success && result.exists)
+            {
+                document.getElementById('hiddenFacebook').submit();
+            }
+            else if(result.success && !result.exists)
+            {
+                var regularScenarios = document.getElementById("regularScenarios");
+        regularScenarios.style.display="none";
+
+
+
+            var hiddenSignupConfig = document.getElementById("hiddenSignupConfig");
+        hiddenSignupConfig.style.display="block";
+            document.getElementById("processing").style.display="none";
+            document.getElementById("processing_loader").style.display="none";
+            }
+    }
+}
+xhr.open('GET', '/Users/IfEmailExist?Email='+user.email, true);
+xhr.send(null);
+
+
+            //document.getElementById('hiddenFacebook').submit();
+          //document.getElementById('displayName').innerText="Hello "+user.displayName;
+          //document.getElementById('displayEmail').innerText=user.email;
+          //document.getElementById('loginWithFacebook').style.display="none";
+      })
+
+  }
+            function loginWithFacebookAdditional(e,b) {
+    e.preventDefault();
+
+    const provider = b===1?new firebase.auth.FacebookAuthProvider():new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+        .then(result => {
+            const user = result.user;
+
+            console.log(user);
+
+            document.getElementById('uid').value = user.uid;
+            console.log(document.getElementById('uid').value);
+
+            document.getElementById("processing").style.display = "block";
+            document.getElementById("processing_loader").style.display = "block";
+
+
+
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    var result = JSON.parse(xhr.responseText);
+                    if (result.success && result.exists) {
+                        document.getElementById('hiddenFacebook').submit();
+                    } else if (result.success && !result.exists) {
+                        var normalLogin = document.getElementById("normalLogin");
+                        normalLogin.style.display = "none";
+
+
+
+                        var privacyPolicyTake = document.getElementById("privacyPolicyTake");
+                        privacyPolicyTake.style.display = "block";
+
+
+                        document.getElementById("processing").style.display = "none";
+                        document.getElementById("processing_loader").style.display = "none";
+                        document.getElementById("normalBtns").style.display = "none";
+
+                    }
+                }
+            }
+            xhr.open('GET', '/Users/IfEmailExist?Email=' + user.email, true);
+            xhr.send(null);
+        })
+
+}
+        </script>
+    </environment>
+    <environment exclude="Development">
+        @*<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                    asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                    asp-fallback-test="window.jQuery"
+                    crossorigin="anonymous"
+                    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+            </script>
+            <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                    crossorigin="anonymous"
+                    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+            </script>
+            <script src="~/js/site.min.js" asp-append-version="true"></script>*@
+        @*<script src="~/js/jquery-3.3.1.slim.min.js"></script>
+            <script src="~/js/bootstrap.bundle.min.js"></script>*@
+        <script src="~/js/Custom.js?v=@Version"></script>
+
+        <!-- Start of HubSpot Embed Code -->
+        <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6019738.js"></script>
+        <!-- End of HubSpot Embed Code -->
+        <script async>(function(s,u,m,o,j,v){j=u.createElement(m);v=u.getElementsByTagName(m)[0];j.async=1;j.src=o;j.dataset.sumoSiteId='8fa8d478cbced171fa04c57c1f04ca2286a114b065c71dfb397868a8f42051bd';v.parentNode.insertBefore(j,v)})(window,document,'script','//load.sumo.com/');</script>
+
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-auth.js"></script>
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#config-web-app -->
+
+        <script>
+            // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBKNgNeoW_afQ0DkdIuVQ57zTqrDzed8Wo",
+    authDomain: "openotito.firebaseapp.com",
+    databaseURL: "https://openotito.firebaseio.com",
+    projectId: "openotito",
+    storageBucket: "",
+    messagingSenderId: "1052374084269",
+    appId: "1:1052374084269:web:7ced29c5c895f72b"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+            function loginWithFacebook(e,b){
+            e.preventDefault();
+      const provider = b===1?new firebase.auth.FacebookAuthProvider():new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+      .then(result=>{
+          const user = result.user;
+          console.log(`Hello ${user.displayName} ${user.email} ${user.uid}`);
+          console.log(user);
+
+            document.getElementById('uid').value=user.uid;
+             console.log(document.getElementById('uid').value);
+
+            document.getElementById("processing").style.display="block";
+            document.getElementById("processing_loader").style.display="block";
+
+
+
+
+            var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+        var result = JSON.parse(xhr.responseText);
+            if(result.success && result.exists)
+            {
+                document.getElementById('hiddenFacebook').submit();
+            }
+            else if(result.success && !result.exists)
+            {
+                var regularScenarios = document.getElementById("regularScenarios");
+        regularScenarios.style.display="none";
+
+
+
+            var hiddenSignupConfig = document.getElementById("hiddenSignupConfig");
+        hiddenSignupConfig.style.display="block";
+            document.getElementById("processing").style.display="none";
+            document.getElementById("processing_loader").style.display="none";
+            }
+    }
+}
+xhr.open('GET', '/Users/IfEmailExist?Email='+user.email, true);
+xhr.send(null);
+
+
+            //document.getElementById('hiddenFacebook').submit();
+          //document.getElementById('displayName').innerText="Hello "+user.displayName;
+          //document.getElementById('displayEmail').innerText=user.email;
+          //document.getElementById('loginWithFacebook').style.display="none";
+      })
+
+  }
+            function loginWithFacebookAdditional(e,b) {
+    e.preventDefault();
+
+    const provider = b===1?new firebase.auth.FacebookAuthProvider():new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+        .then(result => {
+            const user = result.user;
+
+            console.log(user);
+
+            document.getElementById('uid').value = user.uid;
+            console.log(document.getElementById('uid').value);
+
+            document.getElementById("processing").style.display = "block";
+            document.getElementById("processing_loader").style.display = "block";
+
+
+
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    var result = JSON.parse(xhr.responseText);
+                    if (result.success && result.exists) {
+                        document.getElementById('hiddenFacebook').submit();
+                    } else if (result.success && !result.exists) {
+                        var normalLogin = document.getElementById("normalLogin");
+                        normalLogin.style.display = "none";
+
+
+
+                        var privacyPolicyTake = document.getElementById("privacyPolicyTake");
+                        privacyPolicyTake.style.display = "block";
+
+
+                        document.getElementById("processing").style.display = "none";
+                        document.getElementById("processing_loader").style.display = "none";
+                        document.getElementById("normalBtns").style.display = "none";
+
+                    }
+                }
+            }
+            xhr.open('GET', '/Users/IfEmailExist?Email=' + user.email, true);
+            xhr.send(null);
+        })
+
+}
+        </script>
+
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+﻿@model OTITO.Web.Models.Topic.TopicViewModel
+@using System.Security.Claims;
+
+<script type="text/javascript">
+    var pathArray = window.location.pathname.split('/');
+console.log(pathArray);
+if (screen.width <= 991) {
+document.location = "https://www.otito.io/topic/counter/"+pathArray[3];
+}
+</script>
+
+<div class="container mainContainer">
+
+    @{
+        bool admin = User.Identity.IsAuthenticated && User.FindFirst(ClaimTypes.Role).Value.ToString().ToLower().Equals("admin");
+        var slug = Model.Slug;
+    }
+
+    <h1 class="trending_topics">
+
+        @if (admin)
+        {
+            <button class="btn btn-danger" onclick="window.location.href='@Url.Action("DeleteTopic")'">
+                <i class="fa fa-times-circle"
+                   onclick=""></i>
+
+                Delete Topic
+            </button>
+            @if (Model.isSticky)
+            {
+                <button class="btn btn-info" onclick="window.location.href='@Url.Action("RemoveSticky")'">
+                    <i class="fa fa-times-circle"></i>
+                    Remove Sticky
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-info" onclick="window.location.href='@Url.Action("AddSticky")'">
+                    <i class="fa fa-plus-circle"></i>
+                    Add Sticky
+                </button>
+            }
+
+
+        }
+
+
+
+        @Model.TopicName
+
+    </h1>
+    <div class="row button-row">
+        <button class="btn btn-default mr-20" onclick="window.location.href='/topic/addclaim/@(slug)'">
+            Add Claim
+
+        </button>
+        <button class="btn btn-success mr-20">
+            Simple View
+        </button>
+        <button class="btn btn-default mr-20" onclick="window.location.href='/topic/counter/@(slug)'">
+            Show Counterclaims
+        </button>
+        <button class="btn btn-default mr-20" onclick="window.location.href='@Url.Action("SolicitEvidenceTopic")'">
+            Share
+        </button>
+
+
+
+    </div>
+    <div class="row button-row">
+
+            <input type="text" id="searchCriteria" />
+            <button type="button" class="btn btn-success"
+                    onclick="findClaim()">
+                Search
+            </button>
+        </div>
+    @{var i = 0;}
+    @foreach (var item in Model.Claims)
+    {
+        <div class="row claim-row">
+            <div class="col-lg-2 right-border">
+                <button class="btn round-button tip">
+                    @if (item.Status == 2)
+                    {
+                        <span>
+                            UC
+                            <span class="tooltiptext">Unchallenged Claim</span>
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            MV
+                            <span class="tooltiptext">Most Validated</span>
+                        </span>
+                    }
+
+                </button><br>
+                <span class="claim">Claim</span>
+            </div>
+            <div class="col-lg-10 claim_head_cont" style="position: relative">
+                @if (i == 0)
+                {
+                    <h1 class="claim_head">
+                        @item.ClaimTitle
+                    </h1>
+                }
+                else
+                {
+                    <h2 class="claim_head">
+                        @item.ClaimTitle
+                    </h2>
+                }
+
+                <div style="position:absolute;right:-19px;top:-21px;cursor:pointer">
+                    <img src="~/images/down_large_arrow.svg" width="30"
+                         class="showDescription" id="down-@item.Id" onclick="showHelp(@item.Id)"
+                         height="30" />
+                    <img src="~/images/up_large_arrow.svg" width="30"
+                         class="showDescription" id="up-@item.Id" style="display:none;" onclick="showHelp(@item.Id)"
+                         height="30" />
+                </div>
+                <p class="help-text delegate" style="margin-left:0px;display:none;" id="help-@item.Id">
+                    @item.ClaimDescription
+                </p>
+                <button class="btn btn-default mr-20" onclick="window.location.href='/topic/addclaim/@(slug)/@(item.Guid)'">
+                    Add Counter Claim
+                </button>
+
+                <button class="btn btn-default mr-20" onclick="window.location.href='/topic/ask/@(slug)'">
+                    Share
+                </button>
+                <button class="btn btn-info mr-20" onclick="window.location.href='/topic/sources/@(item.Slug)'">
+                    Examine Sources
+                </button>
+                @if (admin)
+                {
+                    <button class="btn btn-danger" onclick="window.location.href='/topic/deleteclaim/@item.Slug'">
+                        <i class="fa fa-times-circle"
+                           onclick=""></i>
+
+                        Delete Claim
+                    </button>
+                }
+
+            </div>
+        </div>
+        i = i + 1;
+    }
+
+</div>
+
+
+
+<script>
+    function findClaim()
+    {
+    var criteria = document.getElementById("searchCriteria").value;
+    window.location.href='/topic/counter/@Model.Slug/'+criteria;
+    }
+
+    var input = document.getElementById("searchCriteria");
+
+// Execute a function when the user releases a key on the keyboard
+input.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+     window.location.href='/topic/counter/@Model.Slug/'+input.value;
+  }
+});
+
+</script>

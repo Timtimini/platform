@@ -1,0 +1,278 @@
+﻿@model OTITO.Web.Models.Topic.AddTopicModel
+<div ng-app="contribution" ng-controller="addContribution">
+    <div class="popupFade" ng-show="fadeShow"></div>
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#000;opacity:0.5;"
+         ng-show="processing">
+    </div>
+    <div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;"
+         ng-show="processing">
+
+        <div class="spinner-border" style="width: 3rem; height: 3rem; position:absolute;top:50%;left:50%; " role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div class="container mainContainer">
+        <form name="addContribution">
+            <h1 class="trending_topics">Add @(Model.Claim.Guid == null ? "a" : "a Counter")  Claim</h1>
+
+            <div ng-show="step===1">
+
+
+                <h2 class="steps">
+                    <span class="highlighter"></span>
+                    Step 1
+                </h2>
+                <div class="clearFix"></div>
+                <div class="row delegate">
+                    <div class="col-lg-8" style="padding: 0">
+
+                        <div class="large-input">
+                            <textarea required style="width:100%;" maxlength="140" name="claimTitle" ng-trim="false" ng-model="claimTitle" ng-maxlength="140" placeholder="Title of your claim"></textarea>
+                        </div>
+                        <span class="counter">
+                            {{140 - claimTitle.length}}/140 left
+                        </span>
+                    </div>
+                </div>
+                <div class="row delegate">
+                    <div class="col-lg-8" style="padding:0">
+                        <div class="large-input">
+                            <textarea required style="width:100%;" maxlength="280" name="claimDescription" ng-trim="false" ng-model="claimDescription" ng-maxlength="280" placeholder="Description of your claim"></textarea>
+                        </div>
+
+                        <span class="counter">
+                            {{280 - claimDescription.length}}/280 left
+                        </span>
+                    </div>
+
+                    <img src="~/images/question-mark.svg" width="40" height="40" class="question-mark" ng-click="showHelp_2()" />
+                </div>
+                <div class="row delegate">
+
+                    <button type="button" class="btn btn-success help-btn" ng-click="goNext(2)"
+                            ng-disabled="!addContribution.claimTitle.$valid || !addContribution.claimDescription.$valid">
+                        Next
+                    </button>
+                </div>
+                @if (Model.Claim.Guid == null)
+                {
+                    <div class="addTopichelpContainer" ng-style="helpStyle">
+                        <p class="help-text ivoryHelp delegate" ng-show="help_2">
+                            1.) Claim title = summary of factual information that helps readers understand the topic<br /><br />
+                            2.) Claim description = description of factual events or discoveries confirming the claim title<br /><br />
+
+                            For example, a claim title could be, "<i>There is no oxygen in space, so no human could survive there.</i>"
+                            And an example of a claim description could be,
+                            "<i>
+                                Humans need oxygen to perform basic respiratory and metabolic processes but space is a vacuum with no air,
+                                so we can’t survive there without a suit.
+                            </i>"<br />
+
+                            You can’t add a claim unless you also add at least one source supporting that claim.
+
+                        </p>
+                        <div class="helpClose">
+                        <i class="fa fa-3x fa-times-circle" ng-click="showHelp_2()"></i>
+                    </div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="addTopichelpContainer" ng-style="helpStyle">
+                        <p class="help-text ivoryHelp delegate" ng-show="help_2">
+                            Sometimes, a claim is factually correct (or was once considered so)
+                            but requires contextualisation using other competing facts. <br /><br />
+
+                            This is where you might want to use a counter claim. A counter claim competes with a main claim for
+                            the position of "most validated" claim. Whichever claim has the sources that have been most validated
+                            by the òtító community will be shown in the simple view, with an "MV" label.<br /><br />
+
+                            1.) Claim title = summary of factual information that helps readers understand the topic<br /><br />
+                            2.) Claim description = description of factual events or discoveries confirming the claim title
+
+
+                        </p>
+                        <div class="helpClose">
+                        <i class="fa fa-3x fa-times-circle" ng-click="showHelp_2()"></i>
+                    </div>
+                    </div>
+                }
+
+
+            </div>
+            <div ng-show="step==2">
+
+                <h2 class="steps">
+                    <span class="highlighter"></span>
+                    Step 2
+                </h2>
+                <div class="row delegate">
+                    <div class="large-input margin420" ng-repeat="x in Sources">
+                        <input ng-model="x.URL" type="text" placeholder="Please enter a source">
+                    </div>
+
+                    <img src="~/images/question-mark.svg" width="40" height="40" class="question-mark" ng-click="showHelp_3()" />
+
+                </div>
+                <div class="row delegate">
+                    <a href="#" ng-click="addSource()" class="addmore">
+                        <img src="~/images/plus_icon.png" />
+                        Add more sources
+                    </a>
+
+
+                </div>
+                <div class="row delegate">
+                    <button class="btn btn-default" ng-click="goBack(1)" style="margin-right: 20px;">
+
+                        <i class="fa fa-angle-left"></i>
+                        Go Back
+                    </button>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <button ng-click="postForm()" class="btn btn-success help-btn min-width-120">
+                            Submit
+                        </button>
+                    }
+
+                </div>
+
+
+                <div class="addTopichelpContainer" ng-style="helpStyle">
+
+
+                    <p class="help-text ivoryHelp delegate" ng-show="help_3">
+                        Sources are key in the world of òtító—they let us know which information to trust and which to disbelieve.<br /><br />
+
+                        Add links to sources that prove the claim you’ve made is factually correct.
+                        Or, if you agree that a claim added by someone else is factually correct,
+                        you can add a source to their claim (each claim can be supported by more than one source). <br /><br />
+
+                        Always check sources in claims. If the sources are deceptive or unreliable,
+                        downvote them—this gives poor quality claims less visibility.
+                        If the sources are reliable and lay out the facts clearly, upvote them as this increases the visibility of
+                        the claims to which they’re attached.
+
+
+                    </p>
+
+
+                    <div class="helpClose">
+                        <i class="fa fa-3x fa-times-circle" ng-click="showHelp_3()"></i>
+                    </div>
+                </div>
+
+        </form>
+
+    </div>
+
+
+
+</div>
+<script type="text/javascript">
+    var app = angular.module('contribution', []);
+    app.controller('addContribution', function($scope, $http, $timeout) {
+    $scope.step=1;
+    $scope.help=false;
+    $scope.claimDescription='';
+    $scope.fadeShow=false;
+    $scope.help_2=false;
+    $scope.help_3=false;
+    $scope.showHelp_2=function()
+    {
+        $scope.help_2=$scope.help_2==true?false:true;
+    $scope.helpStyle=$scope.help_2==true?{display:'block'}:{display:'none'};
+        $scope.fadeShow=$scope.help_2;
+    }
+    $scope.showHelp_3=function()
+    {
+        $scope.help_3=$scope.help_3==true?false:true;
+    $scope.helpStyle=$scope.help_3==true?{display:'block'}:{display:'none'};
+    $scope.fadeShow=$scope.help_3;
+    }
+
+    $scope.topic='';
+    $scope.Sources=[{URL:''},{URL:''}];
+    $scope.addSource=function()
+    {
+        $scope.Sources.push({URL:''});
+    }
+    $scope.showHelp=function()
+    {
+        $scope.help=!$scope.help;
+    }
+    $scope.processing=false;
+    $scope.goNext=function(val)
+    {
+
+    $scope.processing=true;
+         $timeout( function(){
+            $scope.step = val;
+            $scope.processing=false;
+
+        }, 500 );
+    }
+
+    $scope.firstName= "John";
+    $scope.lastName= "Doe";
+    $scope.goBack=function(v)
+    {
+        $scope.step=v;
+    }
+    $scope.postForm=function()
+    {
+        $("#addContribution").submit();
+    }
+    $scope.postForm=function()
+    {
+    var src = $scope.Sources.filter(x=>x.URL.length>0 && validURL(x.URL));
+    if(src.length===0)
+    {
+        alert("Please add atleast one valid source.");
+        return;
+    }
+    $scope.processing=true;
+        $http({
+        url: '/topic/saveclaim',
+        method: "POST",
+    headers: {
+   'Content-Type': "application/json",
+    },
+        data: {
+    Slug:'@Model.Slug',
+    TopicId:@Model.TopicId,
+    Claim:{
+        ClaimTitle:$scope.claimTitle,
+        ClaimDescription:$scope.claimDescription,
+        Guid:'@(Model.Claim.Guid)',
+        Sources:src
+    }
+}
+    })
+    .then(function(response) {
+    console.log(response.data.data.topicId);
+            // success
+    window.location.href='/topic/thankyou/@Model.Slug';
+
+    },
+    function(response) { // optional
+            // failed
+    $scope.processing=false;
+    alert('Unable to post the data at the moment. Please try again later.');
+    });
+    }
+
+    });
+
+     function validURL(str) {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
+}
+</script>

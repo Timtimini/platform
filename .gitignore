@@ -364,4 +364,7 @@ FodyWeavers.xsd
 ## Our extras
 #################################
 
+*.Prod.json
 .DS_Store
+
+.idea/

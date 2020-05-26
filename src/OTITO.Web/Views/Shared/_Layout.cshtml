@@ -54,25 +54,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     @*òtító | a platform for documenting and sharing truth*@
     <title>@title</title>
 
+    <link href="~/css/fonts/fonts.css?v=@Version"/>
+    <link href="~/css/vendor.css?v=@Version" rel="stylesheet">
+    <link href="~/css/site.css?v=@Version" rel="stylesheet">
+    
+    <script src="~/js/vendor.js?v=@Version"></script>
+
     <environment include="Development">
-        <link rel="stylesheet" type="text/css"
-              href="~/css/fonts/fonts.css?v=@Version" />
-        <link href="~/css/bootstrap.min.css?v=@Version" rel="stylesheet">
-        <link href="~/css/nav-bar.css?v=@Version" rel="stylesheet">
-        <link href="~/css/MobileMenu.css?v=@Version" rel="stylesheet">
-        <link href="~/css/custom.css?v=@Version" rel="stylesheet">
-
-        <script src="~/js/jquery-3.3.1.slim.min.js?v=@Version"></script>
-        <script src="~/js/bootstrap.bundle.min.js?v=@Version"></script>
-        @*<script src="~/js/Custom.js"></script>*@
-
-        <script src="~/js/angular.min.js?v=@Version"></script>
-        <script src="~/js/moment.min.js?v=@Version"></script>
-        <script src="~/js/angular-moment.js?v=@Version"></script>
-        <script src="~/js/ui-bootstrap-tpls.js?v=@Version"></script>
-        <script src="~/js/angular-modal-service.js?v=@Version"></script>
-        <script src="~/js/sharer.min.js?v=@Version"></script>
-
         <!-- Facebook Pixel Code -->
         <script>
 !function(f,b,e,v,n,t,s)
@@ -89,31 +77,11 @@ fbq('track', 'PageView');
         <noscript>
             <img height="1" width="1"
                  src="https://www.facebook.com/tr?id=2134026646911493&ev=PageView
-&noscript=1" />
+&noscript=1"/>
         </noscript>
         <!-- End Facebook Pixel Code -->
-        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-            <link rel="stylesheet" href="~/css/site.css" />*@
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" type="text/css"
-              href="~/css/fonts/fonts.css?v=@Version" />
-        <link href="~/css/bootstrap.min.css?v=@Version" rel="stylesheet">
-        <link href="~/css/nav-bar.css?v=@Version" rel="stylesheet">
-        <link href="~/css/MobileMenu.css?v=@Version" rel="stylesheet">
-        <link href="~/css/custom.css?v=@Version" rel="stylesheet">
-
-        <script src="~/js/jquery-3.3.1.slim.min.js?v=@Version"></script>
-        <script src="~/js/bootstrap.bundle.min.js?v=@Version"></script>
-        @*<script src="~/js/Custom.js"></script>*@
-
-        <script src="~/js/angular.min.js?v=@Version"></script>
-        <script src="~/js/moment.min.js?v=@Version"></script>
-        <script src="~/js/angular-moment.js?v=@Version"></script>
-        <script src="~/js/ui-bootstrap-tpls.js?v=@Version"></script>
-        <script src="~/js/angular-modal-service.js?v=@Version"></script>
-        <script src="~/js/sharer.min.js?v=@Version"></script>
-
         <!-- Facebook Pixel Code -->
         <script>
 !function(f,b,e,v,n,t,s)
@@ -130,13 +98,9 @@ fbq('track', 'PageView');
         <noscript>
             <img height="1" width="1"
                  src="https://www.facebook.com/tr?id=2134026646911493&ev=PageView
-&noscript=1" />
+&noscript=1"/>
         </noscript>
         <!-- End Facebook Pixel Code -->
-        @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-                  asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-                  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-            <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />*@
     </environment>
 </head>
 <body>
@@ -145,27 +109,6 @@ fbq('track', 'PageView');
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59QJ29P"
                 height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    @*<nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">OTITO.Web</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>*@
 
     <nav class="navbar navbar-expand-lg fixed-top navbar-light noPadding" id="maincontainernav">
         <div class="container navPadding">
@@ -488,15 +431,10 @@ fbq('track', 'PageView');
         await Html.RenderPartialAsync("_partialResponsive");
     }
 
+    <script src="~/js/site.js?v=@Version"></script>
+
     <environment include="Development">
-        @*<script src="~/js/jquery-3.3.1.slim.min.js"></script>
-            <script src="~/js/bootstrap.bundle.min.js"></script>*@
-        <script src="~/js/Custom.js?v=@Version"></script>
-
-        @*<script src="~/lib/jquery/dist/jquery.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-            <script src="~/js/site.js" asp-append-version="true"></script>*@
-
+     
         <!-- Start of HubSpot Embed Code -->
         <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6019738.js"></script>
         <!-- End of HubSpot Embed Code -->
@@ -638,8 +576,7 @@ xhr.send(null);
             <script src="~/js/site.min.js" asp-append-version="true"></script>*@
         @*<script src="~/js/jquery-3.3.1.slim.min.js"></script>
             <script src="~/js/bootstrap.bundle.min.js"></script>*@
-        <script src="~/js/Custom.js?v=@Version"></script>
-
+      
         <!-- Start of HubSpot Embed Code -->
         <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6019738.js"></script>
         <!-- End of HubSpot Embed Code -->

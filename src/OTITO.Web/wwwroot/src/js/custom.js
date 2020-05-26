@@ -1,71 +1,58 @@
-﻿var down=true;
+﻿var down = true;
 
-$(document).ready(function(){
+$(document).ready(function() {
 
-        $("#showHelp").click(function(){
-          $("#help").toggle();
-        });
+    $("#showHelp").click(function() {
+        $("#help").toggle();
+    });
 
 
 
-    $("#showHelp_2").click(function(){
+    $("#showHelp_2").click(function() {
         $("#help_2").toggle();
     })
 
-    $('.nav-button, .joinPop').click(function(){
-    $('body').toggleClass('nav-open');
-  });
+    $('.nav-button, .joinPop').click(function() {
+        $('body').toggleClass('nav-open');
+    });
+});
+
+function showHelp(val) {
+    console.log($("#down-" + val).is(":visible"))
+    if ($("#down-" + val).is(":visible") === false) {
+
+        $('#up-' + val).hide();
+
+        $('#down-' + val).show();
+        down = false;
+    } else {
+        $('#down-' + val).hide();
+
+        $('#up-' + val).show();
 
 
+        down = true;
+    }
 
-
-        
-      });
-
-
-
-
-function showHelp(val)
-{
-console.log($("#down-"+val).is(":visible"))
- if($("#down-"+val).is(":visible")===false)
-          {
-
-$('#up-'+val).hide();
-
-            $('#down-'+val).show();
-            down=false;
-          }
-          else
-          {
-$('#down-'+val).hide();
-
-            $('#up-'+val).show();
-
-
-            down=true;
-          }
-
-$("#help-"+val).toggle();
+    $("#help-" + val).toggle();
 }
-function showMobileHelp(val)
-{
-console.log($("#down-"+val).is(":visible"))
- if($("#down-m-"+val).is(":visible")===false)
-          {
+
+function showMobileHelp(val) {
+    console.log($("#down-" + val).is(":visible"))
+    if ($("#down-m-" + val).is(":visible") === false) {
 
 
-$('#up-m-'+val).hide();
-$('#down-m-'+val).show();
-            down=false;
-          }
-          else
-          {
+        $('#up-m-' + val).hide();
+        $('#down-m-' + val).show();
+        down = false;
+    } else {
 
-$('#down-m-'+val).hide();
-$('#up-m-'+val).show();
-            down=true;
-          }
+        $('#down-m-' + val).hide();
+        $('#up-m-' + val).show();
+        down = true;
+    }
 
-$("#help-"+val).toggle();
+    $("#help-" + val).toggle();
 }
+
+

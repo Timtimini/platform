@@ -376,33 +376,35 @@ style="display:none;"
     </div>
 
 </div>
-<script>
-    function findClaim()
-    {
-    var criteria = document.getElementById("searchCriteria").value;
-    window.location.href='/topic/counter/@Model.Slug/'+criteria;
-    }
 
-    var input = document.getElementById("searchCriteria");
+@section Scripts{
+    <script>
+        function findClaim() {
+            var criteria = document.getElementById("searchCriteria").value;
+            window.location.href = '/topic/counter/@Model.Slug/' + criteria;
+        }
 
-// Execute a function when the user releases a key on the keyboard
-input.addEventListener("keyup", function(event) {
-  // Number 13 is the "Enter" key on the keyboard
-  if (event.keyCode === 13) {
-    // Cancel the default action, if needed
-    event.preventDefault();
-    // Trigger the button element with a click
-     window.location.href='/topic/counter/@Model.Slug/'+input.value;
-  }
-});
-    $("#revealClaim").click(function(){
-        //alert('hi')
-        $(".hideAndShow").removeClass("hideKarma");
-        $("#showHideClaim").hide();
-    })
-    function nestedClaimReveal(Id)
-    {
-        $("."+Id).removeClass("hideKarma");
-        $("."+Id+"-nested").hide();
-    }
-</script>
+        var input = document.getElementById("searchCriteria");
+
+        // Execute a function when the user releases a key on the keyboard
+        input.addEventListener("keyup", function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                window.location.href = '/topic/counter/@Model.Slug/' + input.value;
+            }
+        });
+        $("#revealClaim").click(function() {
+            //alert('hi')
+            $(".hideAndShow").removeClass("hideKarma");
+            $("#showHideClaim").hide();
+        })
+
+        function nestedClaimReveal(Id) {
+            $("." + Id).removeClass("hideKarma");
+            $("." + Id + "-nested").hide();
+        }
+    </script>
+}

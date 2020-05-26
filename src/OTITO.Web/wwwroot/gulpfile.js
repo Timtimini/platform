@@ -26,6 +26,7 @@ function vendorjs() {
             'src/js/vendor/sharer.min.js',
         ])
         .pipe(concat('vendor.js'))
+        .pipe(uglify())
         .pipe(gulp.dest('./js'));
 }
 

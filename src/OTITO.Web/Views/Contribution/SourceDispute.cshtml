@@ -160,115 +160,109 @@
 
 </div>
 
+@section Scripts {
+
 <script type="text/javascript">
     var app = angular.module('Sources', []);
-    app.controller('ViewSources', ['$scope','$http','$timeout','$interval',function($scope, $http, $timeout, $interval) {
-    $scope.new_source='';
-    $scope.gotoURL=function(val)
-    {
-        window.location.href='@Url.Action("TopicSimpleView","Contribution")?TopicId='+val;
+app.controller('ViewSources', ['$scope', '$http', '$timeout', '$interval', function($scope, $http, $timeout, $interval) {
+    $scope.new_source = '';
+    $scope.gotoURL = function(val) {
+        window.location.href = '@Url.Action("TopicSimpleView","Contribution")?TopicId=' + val;
     }
     $scope.Sources = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Claims.FirstOrDefault().Sources)))
-    $scope.deleteSource=function(Id)
-    {
-        window.location.href='@Url.Action("DeleteSource")?TopicId=@Model.Id&ClaimId=@Model.Claims.FirstOrDefault().Id&SourceId='+Id;
+    $scope.deleteSource = function(Id) {
+        window.location.href = '@Url.Action("DeleteSource")?TopicId=@Model.Id&ClaimId=@Model.Claims.FirstOrDefault().Id&SourceId=' + Id;
     }
-    $scope.addVote=function(val,Id)
-    {
+    $scope.addVote = function(val, Id) {
 
-    $scope.processing=true;
+        $scope.processing = true;
         $http({
-        url: '@Url.Action("AddVote")?TopicId=@Model.Id&ClaimId=@Model.Claims.FirstOrDefault().Id&SourceId='+Id+'&Vote='+val,
-        method: "GET"
-    })
-    .then(function(response) {
-    console.log(response);
-        $scope.processing=false;
+                url: '@Url.Action("AddVote")?TopicId=@Model.Id&ClaimId=@Model.Claims.FirstOrDefault().Id&SourceId=' + Id + '&Vote=' + val,
+                method: "GET"
+            })
+            .then(function(response) {
+                    console.log(response);
+                    $scope.processing = false;
 
-    if(response.data.success)
-    {
-        var source = $scope.Sources.filter(x=>x.Id==Id)[0];
-    source.Vote=response.data.vote;
-    }
-    else
-    {
-        alert(response.data.message);
-    }
+                    if (response.data.success) {
+                        var source = $scope.Sources.filter(x => x.Id == Id)[0];
+                        source.Vote = response.data.vote;
+                    } else {
+                        alert(response.data.message);
+                    }
 
 
-    },
-    function(response) { // optional
-            // failed
-    $scope.processing=false;
-    alert('Unable to post the data at the moment. Please try again later.');
-    });
+                },
+                function(response) { // optional
+                    // failed
+                    $scope.processing = false;
+                    alert('Unable to post the data at the moment. Please try again later.');
+                });
     }
 
-    $interval(function(){
+    $interval(function() {
 
 
 
-    $http({
-        url: '@Url.Action("GetVote")?ClaimId=@Model.Claims.FirstOrDefault().Id',
-        method: "GET"
-    })
-    .then(function(response) {
+        $http({
+                url: '@Url.Action("GetVote")?ClaimId=@Model.Claims.FirstOrDefault().Id',
+                method: "GET"
+            })
+            .then(function(response) {
 
 
-    for(var i=0;i<response.data.data.length;i++)
+                    for (var i = 0; i < response.data.data.length; i++)
 
-    {
+                    {
 
-           var source = $scope.Sources.filter(x=>x.Id==$scope.Sources[i].Id)[0];
-        source.Vote=response.data.data[i].vote;
-
-
-
-    }
-
-
-    },
-    function(response) { // optional
-
-
-    });
-
-    },1000);
-
-
-    $scope.addSource=function(new_source)
-    {
-    console.log($scope.new_source);
-    $scope.processing=true;
-    $http({
-        url: '@Url.Action("AddSource")?ClaimId=@Model.Claims.FirstOrDefault().Id&Source='+$scope.new_source,
-        method: "GET"
-    })
-    .then(function(response) {
-    console.log(response);
-    $scope.processing=false;
-        if(response.data.success)
-    {
-        $scope.Sources.push({Id:response.data.data,Title:'Source '+($scope.Sources.length+1),URL:$scope.new_source,Vote:0})
-    $scope.new_source='';
-    }
-    else
-    {
-        alert("There was an error posting the data");
-    }
+                        var source = $scope.Sources.filter(x => x.Id == $scope.Sources[i].Id)[0];
+                        source.Vote = response.data.data[i].vote;
 
 
 
-    },
-    function(response) { // optional
+                    }
 
-    $scope.processing=false;
-    alert("There was an error posting the data");
-    });
+
+                },
+                function(response) { // optional
+
+
+                });
+
+    }, 1000);
+
+
+    $scope.addSource = function(new_source) {
+        console.log($scope.new_source);
+        $scope.processing = true;
+        $http({
+                url: '@Url.Action("AddSource")?ClaimId=@Model.Claims.FirstOrDefault().Id&Source=' + $scope.new_source,
+                method: "GET"
+            })
+            .then(function(response) {
+                    console.log(response);
+                    $scope.processing = false;
+                    if (response.data.success) {
+                        $scope.Sources.push({ Id: response.data.data, Title: 'Source ' + ($scope.Sources.length + 1), URL: $scope.new_source, Vote: 0 })
+                        $scope.new_source = '';
+                    } else {
+                        alert("There was an error posting the data");
+                    }
+
+
+
+                },
+                function(response) { // optional
+
+                    $scope.processing = false;
+                    alert("There was an error posting the data");
+                });
 
     }
 
 
-    }]);
+}]);
 
 </script>
+    
+}

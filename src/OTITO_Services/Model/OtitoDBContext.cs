@@ -36,7 +36,7 @@ namespace OTITO_Services.Model
         {
             modelBuilder.Entity<Claim>(entity =>
             {
-                entity.ToTable("claim", "otito_v3");
+                entity.ToTable("claim");
 
                 entity.Property(e => e.Id).HasColumnType("int(11)");
 
@@ -83,7 +83,7 @@ namespace OTITO_Services.Model
 
             modelBuilder.Entity<Source>(entity =>
             {
-                entity.ToTable("Source", "otito_v3");
+                entity.ToTable("Source");
 
                 entity.Property(e => e.Id).HasColumnType("int(11)");
 
@@ -122,7 +122,7 @@ namespace OTITO_Services.Model
 
             modelBuilder.Entity<Topic>(entity =>
             {
-                entity.ToTable("topic", "otito_v3");
+                entity.ToTable("topic");
 
                 entity.Property(e => e.Id).HasColumnType("int(11)");
                
@@ -155,7 +155,7 @@ namespace OTITO_Services.Model
 
             modelBuilder.Entity<Activity>(entity =>
             {
-                entity.ToTable("activity", "otito_v3");
+                entity.ToTable("activity");
 
                 entity.Property(e => e.Id).HasColumnType("int(11)");
 
@@ -178,7 +178,7 @@ namespace OTITO_Services.Model
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("User", "otito_v3");
+                entity.ToTable("User");
 
                 entity.Property(e => e.Id).HasColumnType("int(11)");
 
@@ -224,7 +224,7 @@ namespace OTITO_Services.Model
 
             modelBuilder.Entity<Vote>(entity =>
             {
-                entity.ToTable("Vote", "otito_v3");
+                entity.ToTable("Vote");
 
                 entity.Property(e => e.Id).HasColumnType("int(11)");
 

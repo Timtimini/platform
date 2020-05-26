@@ -1,9 +1,9 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTITO.Web", "OTITO.Web\OTITO.Web.csproj", "{90BFDBF5-35A5-487A-A80B-D09B6A99FD53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTITO.Web", "src\OTITO.Web\OTITO.Web.csproj", "{90BFDBF5-35A5-487A-A80B-D09B6A99FD53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTITO_Services", "OTITO_Services\OTITO_Services.csproj", "{22E05D1F-36FD-4D7E-8066-7198E77E6526}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTITO_Services", "src\OTITO_Services\OTITO_Services.csproj", "{22E05D1F-36FD-4D7E-8066-7198E77E6526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

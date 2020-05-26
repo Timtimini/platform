@@ -61,8 +61,8 @@ function customcss() {
         .src([
             'src/css/nav-bar.css',
             'src/css/MobileMenu.css',
-            'src/css/custom.css',
             'src/css/homepage.css',
+            'src/css/custom.css',
         ])
         .pipe(concat('site.css'))
         .pipe(postcss([cssnano()]))

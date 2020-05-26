@@ -1,8 +1,4 @@
-'use strict';
-
-let module = angular.module('angularModalService', []);
-
-module.factory('ModalService', ['$animate', '$document', '$compile', '$controller', '$http', '$rootScope', '$q', '$templateRequest', '$timeout',
+angular.module('angularModalService', []).factory('ModalService', ['$animate', '$document', '$compile', '$controller', '$http', '$rootScope', '$q', '$templateRequest', '$timeout',
   function($animate, $document, $compile, $controller, $http, $rootScope, $q, $templateRequest, $timeout) {
 
   function ModalService() {

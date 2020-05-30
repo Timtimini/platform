@@ -287,7 +287,7 @@ namespace OTITO.Web.Controllers
                 //    .Sum(x=>x.Count);
                 //_model.Contributors += (int)_topic.Claims.Select(x => new { SourceCount = x.CounterClaims.Select(cc => new { SourceCount = cc.SourceContributors })
                 //.Sum(v => v.SourceCount) }).Sum(x => x.SourceCount);
-
+                _model.isSticky = _topic.isSticky;
                 _model.Contributors = _topic.Contributors;
 
                 _model.Claims = (from c in _topic.Claims
@@ -302,6 +302,16 @@ namespace OTITO.Web.Controllers
                                      TotalVotes=c.TotalVotes,
                                      UpVotes=c.UpVotes,
                                      DownVotes=c.DownVotes,
+                                     Sources=c.Sources.Select(v=>new SourceViewModel {
+                                         Id = v.Id,
+                                         URL = v.URL,
+                                         Title = v.Title,
+                                         Vote = v.Vote,
+                                         NegativeKarma = (v.TotalVote == 0 ? 0 : (double)v.NegativeKarma / (double)(v.TotalVote)) * 100,
+                                         PositiveKarma = (v.TotalVote == 0 ? 0 : (double)v.PositiveKarma / (double)(v.TotalVote)) * 100,
+                                         Slug = v.Slug,
+                                         Guid = v.Guid
+                                     }).ToList(),
                                      KarmaPercent= c.TotalVotes==0?0:((double)c.DownVotes/(double)c.TotalVotes)*100,
                                      CounterClaims = (from cc in c.CounterClaims
                                                       select new ClaimViewModel
@@ -316,6 +326,17 @@ namespace OTITO.Web.Controllers
                                                           UpVotes = cc.UpVotes,
                                                           DownVotes = cc.DownVotes,
                                                           KarmaPercent = c.TotalVotes == 0 ? 0 : ((double)cc.DownVotes / (double)cc.TotalVotes) * 100,
+                                                          Sources = cc.Sources.Select(t => new SourceViewModel
+                                                          {
+                                                              Id = t.Id,
+                                                              URL = t.URL,
+                                                              Title = t.Title,
+                                                              Vote = t.Vote,
+                                                              NegativeKarma = (t.TotalVote == 0 ? 0 : (double)t.NegativeKarma / (double)(t.TotalVote)) * 100,
+                                                              PositiveKarma = (t.TotalVote == 0 ? 0 : (double)t.PositiveKarma / (double)(t.TotalVote)) * 100,
+                                                              Slug = t.Slug,
+                                                              Guid = t.Guid
+                                                          }).ToList()
                                                       }
                                 ).ToList()
 
@@ -390,8 +411,8 @@ namespace OTITO.Web.Controllers
 
 
 
-                //ViewBag.Description = meta.preamble+result.Claims.FirstOrDefault().ClaimDescription+meta.postfix;
-                //ViewBag.Title = result.TopicName;
+                ViewBag.Description = meta.preamble.Value.ToString()+result.Claims.FirstOrDefault().ClaimDescription+meta.postfix.Value;
+                ViewBag.Title = result.Claims.FirstOrDefault().ClaimTitle;
 
             }
             catch(Exception ex)
@@ -401,6 +422,8 @@ namespace OTITO.Web.Controllers
                 _logger.LogWarning("Inside Exception", ex, "GetById({SLUG}) NOT FOUND", slug);
 
             }
+            //ViewBag.Description = meta.preamble+result.Claims.FirstOrDefault().ClaimDescription+meta.postfix;
+            //ViewBag.Title = result.TopicName;
 
             return View(_model);
         }
@@ -441,6 +464,23 @@ namespace OTITO.Web.Controllers
                 return Json(new { success = false, Message = "There was an error fetching data" });
             }
         }
+
+        public JsonResult GetSourceVotes(string SourceIds)
+        {
+            try
+            {
+                List<int> Sources = SourceIds.Split(',').Select(int.Parse).ToList();
+
+
+                var data = _service.GetSourceVotes(Sources);
+                return Json(new { success = true, data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, Message = "There was an error fetching data" });
+            }
+        }
+
         [Authorize]
         [Route("topic/addsource")]
         public JsonResult addNewSource(string slug,string Source)

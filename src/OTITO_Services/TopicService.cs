@@ -28,6 +28,7 @@ namespace OTITO_Services
         void addSticky(string slug);
         void removeSticky(string slug);
         void addSlugs();
+        IList<SourceVote> GetSourceVotes(IList<int> SourceIds);
     }
     public class TopicService : ITopicService
     {
@@ -226,6 +227,7 @@ namespace OTITO_Services
                               TopicName = t.TopicName,
                               Slug=t.Slug,
                               Guid=t.Guid,
+                              isSticky= Convert.ToInt32(t.IsSticked) == 1 ? true : false,
                               DateCreated=t.DateCreated,
                               Claims = (
                                from c in _db.Claim.Where(x => x.TopicId == t.Id && (x.ClaimId == null || x.ClaimId == 0))
@@ -290,6 +292,7 @@ namespace OTITO_Services
                               Slug = t.Slug,
                               Guid = t.Guid,
                               Contributors=totals,
+                              isSticky = Convert.ToInt32(t.IsSticked) == 1 ? true : false,
                               DateCreated = t.DateCreated,
                               Claims = (
                                from c in _db.Claim.Where(x => x.TopicId == t.Id && (x.ClaimId == null || x.ClaimId == 0)
@@ -309,6 +312,21 @@ namespace OTITO_Services
                                    SourceContributors = _db.Source.Select(x => new { UserId = x.UserId }).Distinct().Count(),
                                    //1=>Most Validated
                                    //2=> UnChallenged
+                                   Sources= (from s in _db.Source.Where(v => v.ClaimId == c.Id)
+                                             join u in _db.User on s.UserId equals u.Id
+                                             select new SourceView
+                                             {
+                                                 Id = s.Id,
+                                                 Title = s.Title,
+                                                 URL = s.Url,
+                                                 Vote = s.Vote ?? 0,
+                                                 NegativeKarma = u.NegativeKarma ?? 0,
+                                                 PositiveKarma = u.PositiveKarma ?? 0,
+                                                 TotalVote = u.TotalVote,
+                                                 Slug = s.Slug,
+                                                 Guid = s.Guid
+                                             }
+                                            ).OrderByDescending(x=>x.Vote).Take(1).ToList(),
                                    Status =_db.Claim.Any(x=>x.ClaimId==c.Id)?1:2,
                                    CounterClaims = (
                                                    from cc in _db.Claim.Where(x => x.ClaimId == c.Id
@@ -327,6 +345,21 @@ namespace OTITO_Services
                                                        Guid = cc.Guid,
                                                        UserId = cc.UserId,
                                                        SourceContributors = _db.Source.Select(x => new { UserId = x.UserId }).Distinct().Count(),
+                                                       Sources = (from ss in _db.Source.Where(v => v.ClaimId == cc.Id)
+                                                                  join uu in _db.User on ss.UserId equals uu.Id
+                                                                  select new SourceView
+                                                                  {
+                                                                      Id = ss.Id,
+                                                                      Title = ss.Title,
+                                                                      URL = ss.Url,
+                                                                      Vote = ss.Vote ?? 0,
+                                                                      NegativeKarma = uu.NegativeKarma ?? 0,
+                                                                      PositiveKarma = uu.PositiveKarma ?? 0,
+                                                                      TotalVote = uu.TotalVote,
+                                                                      Slug = ss.Slug,
+                                                                      Guid = ss.Guid
+                                                                  }
+                                            ).OrderByDescending(x => x.Vote).Take(1).ToList()
                                                    }
                                                   ).OrderByDescending(x => x.TotalVotes).ToList()
                                }
@@ -650,6 +683,23 @@ namespace OTITO_Services
                     }
                 ).ToList();
            
+            return _data;
+        }
+        public IList<SourceVote> GetSourceVotes(IList<int> SourceIds)
+        {
+            var _data = (from v in _db.Source.Where(x => SourceIds.Contains(x.Id))
+                         join u in _db.User on v.UserId equals u.Id
+
+                         select new SourceVote
+                         {
+                             SourceId = v.Id,
+                             Vote = v.Vote ?? 0,
+                             NegativeKarma = (u.TotalVote == 0 ? 0 : (double)(u.NegativeKarma ?? 0) / (double)(u.TotalVote)) * 100,
+                             PositiveKarma = (u.TotalVote == 0 ? 0 : (double)(u.PositiveKarma ?? 0) / (double)(u.TotalVote)) * 100,
+
+                         }
+                ).ToList();
+
             return _data;
         }
         public string SaveSource(string Guid,string Slug, string SlugWithoutGuid, string Source, int UserId)

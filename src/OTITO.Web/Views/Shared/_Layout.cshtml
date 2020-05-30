@@ -1,7 +1,7 @@
 ﻿@using System.Security.Claims;
 
 @{
-    var Version = "2.1.1.73";
+    var Version = "2.1.1.85";
 
     var description = ViewBag.Description;
     var title = ViewBag.Title == "Home Page" ? "òtító | a platform for fighting misinformation" : ViewBag.Title;
@@ -28,6 +28,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta property="og:title" content="@title" />
     <meta property="fb:app_id" content="695016410913459" />
     <meta property="og:description" content="@description" />
+    <meta property="twitter:card" content="summary_large_image">
+
+    <meta name="twitter:image" content="https://www.otito.io/images/responsive_logo.png">
+    <meta name="twitter:site" content="@description" />
+    <meta name="twitter:title" content="@title" />
+    <meta name="twitter:description" content="@description" />
+
+
+
+
     <meta name="author" content="Afraz">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta property="og:image" content="https://www.otito.io/images/responsive_logo.png">
@@ -46,6 +56,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         #searchTopic {
             cursor: pointer;
         }
+
         .noShadow {
             box-shadow: 0px 0px 0px 0px rgba(199,244,225,1) !important;
             -webkit-box-shadow: 0px 0px 0px 0px rgba(199,244,225,1) !important;

@@ -24,6 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.1" />
     <PackageReference Include="FirebaseAdmin" Version="1.7.0" />
+    <PackageReference Include="RobotsTxtCore" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>

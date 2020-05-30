@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -110,7 +111,7 @@ namespace OTITO.Web.Controllers
             }
 
         }
-        [Route("/About")]
+        [Route("/about")]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -119,11 +120,11 @@ namespace OTITO.Web.Controllers
             //"Learn more about thinking underlying òtító—a place where truth is a utilitarian, pluralistic and cohesive representation of the soundest set of conclusions, based on the least contested bodies of knowledge.";
             return View();
         }
-        public IActionResult Help()
-        {
-            return View();
-        }
-        [Route("/Donate")]
+        //public IActionResult Help()
+        //{
+        //    return View();
+        //}
+        [Route("/donate")]
         public IActionResult Donate()
         {
             ViewBag.Title = "Donate to òtító—a platform for fighting misinformation";
@@ -133,7 +134,7 @@ namespace OTITO.Web.Controllers
             return View();
         }
         [HttpGet]
-        [Route("/Contact")]
+        [Route("/contact")]
         public IActionResult Contact()
         {
             ContactIn _model = new ContactIn();
@@ -143,7 +144,7 @@ namespace OTITO.Web.Controllers
             return View(_model);
         }
         [HttpPost]
-        [Route("/Contact")]
+        [Route("/contact")]
         public IActionResult Contact(ContactIn _model)
         {
             if (ModelState.IsValid)
@@ -185,7 +186,7 @@ namespace OTITO.Web.Controllers
             ViewBag.Description = meta.description.Value.ToString();
             return View(_model);
         }
-
+        [Route("/privacy")]
         public IActionResult Privacy()
         {
             return View();
@@ -221,7 +222,77 @@ namespace OTITO.Web.Controllers
         {
             return View();
         }
+        [Route("/sitemap.xml")]
+        public void SitemapXml()
+        {
+            string host = Request.Scheme + "://" + Request.Host;
 
+            Response.ContentType = "application/xml";
+            var today = "2019-10-13";
+            using (var xml = XmlWriter.Create(Response.Body, new XmlWriterSettings { Indent = true }))
+            {
+                xml.WriteStartDocument();
+                xml.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", host);
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/topic");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/topic/sources");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/topic/ask");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/about");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/privacy");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/donate");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/contact");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/Users/Login");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteStartElement("url");
+                xml.WriteElementString("loc", "https://www.otito.io/Users/Signup");
+                xml.WriteElementString("lastmod", today);
+                xml.WriteEndElement();
+
+                xml.WriteEndElement();
+            }
+        }
 
     }
 }

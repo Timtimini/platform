@@ -46,7 +46,8 @@ $('#down-'+val).hide();
             down=true;
           }
 
-$("#help-"+val).toggle();
+    $("#help-"+val).toggle();
+    $(".help-"+val).toggle();
 }
 function showMobileHelp(val)
 {
@@ -68,4 +69,5 @@ $('#up-m-'+val).show();
           }
 
 $("#help-"+val).toggle();
+$(".help-"+val).toggle();
 }

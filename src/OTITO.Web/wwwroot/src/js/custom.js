@@ -35,6 +35,7 @@ function showHelp(val) {
     }
 
     $("#help-" + val).toggle();
+    $(".help-" + val).toggle();
 }
 
 function showMobileHelp(val) {
@@ -53,6 +54,5 @@ function showMobileHelp(val) {
     }
 
     $("#help-" + val).toggle();
+    $(".help-" + val).toggle();
 }
-
-

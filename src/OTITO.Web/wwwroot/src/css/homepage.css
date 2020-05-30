@@ -164,7 +164,7 @@ h1.slideHeading {
     animation-name: anim-2;
 }
 .slideImageRight {
-    margin-left: 0;
+    margin-left: 22px;
     margin-top: 140px;
 
 }

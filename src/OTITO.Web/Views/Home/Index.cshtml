@@ -2,8 +2,16 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-<div class="container mainContainer" ng-app="Home" ng-controller="stream">
 
+<div class="container mainContainer" ng-app="Home" ng-controller="stream">
+    <style>
+        .displaynone{
+            display:none;
+        }
+        .displayblock{
+            display:block !important;
+        }
+    </style>
     @*<div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#000;opacity:0.5;"
              ng-show="processing">
         </div>
@@ -326,7 +334,9 @@
             }*@
 
         @*| amSubtract : '1' : 'hours' | amDateFormat : 'hh'*@
-        <div style="margin: 20px; color: red; border: 1px solid red; display: block; width: 100%; padding: 30px;"
+        <div style="margin: 20px; color: red; border: 1px solid red;display:none; width: 100%; padding: 30px;"
+
+             ng-class="{displayblock: stream.length == 0, displaynone: stream.length >0}"
              ng-show="stream.length==0">
             No one’s created a topic on this subject yet. You should <a href="/topic/addtopic">add a topic</a> and help the world get informed!
 
@@ -396,240 +406,259 @@
 
 </div>
 
-@section Scripts{
-
+@section Scripts {
 <script type="text/javascript">
     var app = angular.module('Home', ['angularMoment']);
-    app.controller('stream', ['$scope', '$http', '$timeout', 'moment', '$interval', '$anchorScroll', function($scope, $http, $timeout, moment, $interval,
-        $anchorScroll
+    app.controller('stream', ['$scope','$http','$timeout','moment','$interval','$anchorScroll',function($scope, $http, $timeout,moment,$interval,
+    $anchorScroll
     ) {
-        $scope.processing = false;
-        $scope.exampleDate = moment().toDate();
-        $scope.PageNo = 2;
-        $scope.SearchTerm = '';
-        $scope.gotoURL = function(val) {
-            window.location.href = '/topic/' + val;
-        }
-        $scope.gotoURLMobile = function(val) {
-            window.location.href = '/topic/' + val;
-        }
+    $scope.processing=false;
+    $scope.exampleDate = moment().toDate();
+    $scope.PageNo=2;
+    $scope.SearchTerm='';
+    $scope.gotoURL=function(val)
+    {
+        window.location.href='/topic/'+val;
+    }
+    $scope.gotoURLMobile=function(val)
+    {
+        window.location.href='/topic/'+val;
+    }
 
         $scope.stream = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Topics)))
 
-        $scope.bringMore = function() {
+    $scope.bringMore=function()
+    {
 
 
-            $http({
-                    url: '@Url.Action("PageStream")?PageNo=' + $scope.PageNo + '&SearchTerm=',
-                    method: "GET"
-                })
-                .then(function(response) {
+    $http({
+        url: '@Url.Action("PageStream")?PageNo='+$scope.PageNo+'&SearchTerm=',
+        method: "GET"
+    })
+    .then(function(response) {
 
 
-                        $scope.PageNo = $scope.PageNo + 1;
-                        for (var i = 0; i < response.data.data.topics.length; i++) {
-                            $scope.stream.push({
-                                Id: response.data.data.topics[i].id,
-                                TopicName: response.data.data.topics[i].topicName,
-                                GradientName: response.data.data.topics[i].gradientName,
-                                DateCreated: response.data.data.topics[i].dateCreated,
-                                Claims: response.data.data.topics[i].claims,
-                                Slug: response.data.data.topics[i].slug,
-                            });
-                        }
-                        console.log($scope.stream);
-                    },
-                    function(response) { // optional
+    $scope.PageNo=$scope.PageNo+1;
+    for(var i=0;i<response.data.data.topics.length;i++)
+    {
+        $scope.stream.push({Id:response.data.data.topics[i].id, TopicName:response.data.data.topics[i].topicName,
+        GradientName:response.data.data.topics[i].gradientName,
+        DateCreated:response.data.data.topics[i].dateCreated,
+        Claims:response.data.data.topics[i].claims,
+        Slug:response.data.data.topics[i].slug,
+        });
+    }
+    console.log($scope.stream);
+    },
+    function(response) { // optional
 
 
-                    });
+    });
 
 
-        }
+    }
 
 
 
-        $scope.searchMore = function() {
-            $scope.PageNo = 1;
-            $scope.processing = true;
-            $http({
-                    url: '@Url.Action("PageStream")?PageNo=' + $scope.PageNo + '&SearchTerm=' + $scope.SearchTerm,
-                    method: "GET"
-                })
-                .then(function(response) {
+    $scope.searchMore=function()
+    {
+    $scope.PageNo=1;
+    $scope.processing=true;
+    $http({
+        url: '@Url.Action("PageStream")?PageNo='+$scope.PageNo+'&SearchTerm='+$scope.SearchTerm,
+        method: "GET"
+    })
+    .then(function(response) {
 
 
-                        $scope.PageNo = $scope.PageNo + 1;
-                        $scope.stream = [];
-                        for (var i = 0; i < response.data.data.topics.length; i++) {
-                            $scope.stream.push({
-                                Id: response.data.data.topics[i].id,
-                                TopicName: response.data.data.topics[i].topicName,
-                                GradientName: response.data.data.topics[i].gradientName,
-                                DateCreated: response.data.data.topics[i].dateCreated,
-                                Claims: response.data.data.topics[i].claims,
-                                Slug: response.data.data.topics[i].slug,
-                            });
+    $scope.PageNo=$scope.PageNo+1;
+    $scope.stream=[];
+    for(var i=0;i<response.data.data.topics.length;i++)
+    {
+        $scope.stream.push({Id:response.data.data.topics[i].id, TopicName:response.data.data.topics[i].topicName,
+        GradientName:response.data.data.topics[i].gradientName,
+        DateCreated:response.data.data.topics[i].dateCreated,
+        Claims:response.data.data.topics[i].claims,
+        Slug:response.data.data.topics[i].slug,
+        });
 
 
-                        }
-                        console.log($scope.stream);
-                        console.log('brought');
-                        $scope.processing = false;
-                        $anchorScroll('trending_topics');
+    }
+    console.log($scope.stream);
+    console.log('brought');
+    $scope.processing=false;
+    $anchorScroll('trending_topics');
 
-                    },
-                    function(response) { // optional
-
-
-                    });
+    },
+    function(response) { // optional
 
 
-        }
+    });
+
+
+    }
 
 
     }]);
-    app.directive('myEnter', function() {
-        return function(scope, element, attrs) {
-            element.bind("keydown keypress", function(event) {
-                if (event.which === 13) {
-                    scope.$apply(function() {
-                        scope.$eval(attrs.myEnter);
-                    });
+    app.directive('myEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if (event.which === 13) {
+                scope.$apply(function () {
+                    scope.$eval(attrs.myEnter);
+                });
 
-                    event.preventDefault();
-                }
-            });
-        };
-    });
-
-
-
-    app.filter('fromNow', function() {
-        return function(dateValue) {
-            //return moment(dateValue, "YYYY-MM-DDTHH:mm:ss").locale('en').fromNow();
-            return dateValue ? moment.utc(dateValue).local().fromNow() : "";
-        };
-    });
-
-    function gcd(a, b) {
-        return (b == 0) ? a : gcd(b, a % b);
-    }
-    var slideIndex = 1;
-    $(document).ready(function() {
-        $(window).resize(function() {
-
-            var w = $(window).width();
-
-            if (w < 992) {
-                $(".desktopSlides").css("display", "none");
-                $(".mobileSlides").css("display", "block");
-                //var h = $( window ).height();
-                var h = $(".mobileSlide:nth-child(" + slideIndex + ")").height();
-                $(".mobileSlides").css("height", h + 60);
-                showSlidesMobile(slideIndex);
-
-            } else {
-
-                $(".desktopSlides").css("display", "block");
-                $(".mobileSlides").css("display", "none");
-
-
-
-                var height = $(".mySlides:nth-child(" + slideIndex + ") .row").height();
-                console.log(height);
-                $(".desktopSlides").css("height", height + 40);
-
-                showSlides(slideIndex);
+                event.preventDefault();
             }
-
         });
-        var w = $(window).width();
+    };
+});
 
 
-        if (w < 992) {
-            $(".mobileSlides").css("display", "block");
-            $(".desktopSlides").css("display", "none");
-            //var h = screen.height;
-            var h = $(".mobileSlide:nth-child(" + slideIndex + ")").height();
-            $(".mobileSlides").css("height", h + 60);
-            showSlidesMobile(slideIndex);
-        } else {
 
-            $(".mobileSlides").css("display", "none");
-            $(".desktopSlides").css("display", "block");
-            setTimeout(function() {
-                //var height = $(window).height();
-                console.log(slideIndex)
-                var height = $(".mySlides:nth-child(" + slideIndex + ") .row").height();
-
-                $(".desktopSlides").css("height", height + 40);
-            }, 100)
-
-            showSlides(slideIndex);
+    app.filter('fromNow', function () {
+      return function (dateValue) {
+        //return moment(dateValue, "YYYY-MM-DDTHH:mm:ss").locale('en').fromNow();
+        return dateValue? moment.utc(dateValue).local().fromNow():"";
+      };
+});
+     function gcd (a, b) {
+            return (b == 0) ? a : gcd (b, a%b);
         }
+    var slideIndex = 1;
+    $(document).ready(function(){
+    $(window).resize(function(){
+
+        var w = $( window ).width();
+
+    if(w<992)
+    {
+    $(".desktopSlides").css("display","none");
+    $(".mobileSlides").css("display","block");
+        //var h = $( window ).height();
+    var h = $(".mobileSlide:nth-child("+slideIndex+")").height();
+    $(".mobileSlides").css("height",h+60);
+    showSlidesMobile(slideIndex);
+
+    @*setInterval(function(){
+        showSlidesMobile(slideIndex += slideIndex)
+    },2000)*@
+
+    }
+    else
+    {
+
+    $(".desktopSlides").css("display","block");
+    $(".mobileSlides").css("display","none");
+
+
+
+    var height = $(".mySlides:nth-child("+slideIndex+") .row").height();
+        console.log(height);
+    $(".desktopSlides").css("height",height+40);
+
+        showSlides(slideIndex);
+    }
+
+     });
+    var w = $( window ).width();
+
+
+    if(w<992)
+    {
+    $(".mobileSlides").css("display","block");
+    $(".desktopSlides").css("display","none");
+        //var h = screen.height;
+        var h = $(".mobileSlide:nth-child("+slideIndex+")").height();
+    $(".mobileSlides").css("height",h+60);
+    showSlidesMobile(slideIndex);
+
+    @*setInterval(function(){
+        showSlidesMobile(slideIndex += slideIndex)
+    },2000)*@
+
+    }
+    else
+    {
+
+    $(".mobileSlides").css("display","none");
+    $(".desktopSlides").css("display","block");
+        setTimeout(function(){
+    //var height = $(window).height();
+    console.log(slideIndex)
+        var height = $(".mySlides:nth-child("+slideIndex+") .row").height();
+
+        $(".desktopSlides").css("height",height+40);
+        },100)
+        @*var height = $(window).height();
+        //var height = $(".mySlides .row").height();
+    console.log(height + " height of the slide");
+        $(".mySlides").css("height",height+40);*@
+        showSlides(slideIndex);
+    }
 
 
     })
 
 
 
-    function plusSlides() {
-        showSlides(slideIndex += 1);
+function plusSlides() {
+  showSlides(slideIndex += 1);
+}
+    function minusSlides()
+    {
+        showSlides(slideIndex-=1);
     }
-
-    function minusSlides() {
-        showSlides(slideIndex -= 1);
+function plusSlidesMobile()
+    {
+    showSlidesMobile(slideIndex+=1)
     }
-
-    function plusSlidesMobile() {
-        showSlidesMobile(slideIndex += 1)
+ function minusSlidesMobile()
+    {
+    showSlidesMobile(slideIndex-=1)
     }
-
-    function minusSlidesMobile() {
-        showSlidesMobile(slideIndex -= 1)
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+function currentSlideM(n)
+    {
+    showSlidesMobile(slideIndex=n);
     }
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("paginated");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+}
 
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
-    }
+ function showSlidesMobile(n) {
+  var i;
+  var slides = document.getElementsByClassName("mobileSlide");
+  var dots = document.getElementsByClassName("mp");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
 
-    function currentSlideM(n) {
-        showSlidesMobile(slideIndex = n);
-    }
-
-    function showSlides(n) {
-        var i;
-        var slides = document.getElementsByClassName("mySlides");
-        var dots = document.getElementsByClassName("paginated");
-        if (n > slides.length) { slideIndex = 1 }
-        if (n < 1) { slideIndex = slides.length }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        for (i = 0; i < dots.length; i++) {
-            dots[i].className = dots[i].className.replace(" active", "");
-        }
-        slides[slideIndex - 1].style.display = "block";
-        dots[slideIndex - 1].className += " active";
-    }
-
-    function showSlidesMobile(n) {
-        var i;
-        var slides = document.getElementsByClassName("mobileSlide");
-        var dots = document.getElementsByClassName("mp");
-        if (n > slides.length) { slideIndex = 1 }
-        if (n < 1) { slideIndex = slides.length }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        for (i = 0; i < dots.length; i++) {
-            dots[i].className = dots[i].className.replace(" active", "");
-        }
-        slides[slideIndex - 1].style.display = "block";
-        dots[slideIndex - 1].className += " active";
-
-    }
+    @*setTimeout(function(){
+    showSlidesMobile(slideIndex+=n);
+    }, 5000);*@
+}
 </script>
 
 }

@@ -179,6 +179,17 @@ namespace OTITO.Web
             {
                 Credential = GoogleCredential.FromFile("openotito-firebase-adminsdk-9fhtt-26f125a701.json"),
             });
+
+            app.UseRobotsTxt(builder =>
+        builder
+            .AddSection(section =>
+                section
+                    .AddComment("Allow")
+                    .AddUserAgent("*")
+                    .Allow("/")
+                )
+            .AddSitemap("https://otito.io/sitemap.xml")
+    );
         }
     }
 }

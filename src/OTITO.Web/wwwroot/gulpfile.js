@@ -6,6 +6,13 @@ const postcss = require("gulp-postcss");
 const cssnano = require("cssnano");
 const imagemin = require('gulp-imagemin');
 
+function quickbuildclean() {
+    return del([
+        './js/**/*',
+        './css/**/*',
+    ]);
+}
+
 function clean() {
     return del([
         './js/**/*',
@@ -61,11 +68,18 @@ function customcss() {
         .src([
             'src/css/nav-bar.css',
             'src/css/MobileMenu.css',
-            'src/css/homepage.css',
             'src/css/custom.css',
         ])
         .pipe(concat('site.css'))
         .pipe(postcss([cssnano()]))
+        .pipe(gulp.dest('./css'));
+}
+
+function homepagecss() {
+    return gulp
+        .src([
+            'src/css/homepage.css',
+        ])
         .pipe(gulp.dest('./css'));
 }
 
@@ -75,7 +89,8 @@ function images() {
         .pipe(gulp.dest('./images'));
 }
 
-const css = gulp.parallel(fonts, customcss, vendorcss);
+const css = gulp.parallel(fonts, customcss, vendorcss, homepagecss);
 const javascript = gulp.parallel(vendorjs, customjs);
 
+exports.quick = gulp.series(quickbuildclean, javascript, css);
 exports.default = gulp.series(clean, javascript, css, images);

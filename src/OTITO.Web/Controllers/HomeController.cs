@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OTITO.Web.Models;
-using OTITO.Web.Models.Authentication;
 using OTITO.Web.Models.Contact;
 using OTITO.Web.Models.Email;
 using OTITO.Web.Models.Enum;
@@ -26,12 +21,16 @@ namespace OTITO.Web.Controllers
     public class HomeController : Controller
     {
         private readonly IHomeService _service;
+        private readonly ILogger<HomeController> _log;
         private EmailSettings _emailSettings { get; }
-        public HomeController(IHomeService service, IOptions<EmailSettings> emailSettings) 
+        
+        public HomeController(IHomeService service, IOptions<EmailSettings> emailSettings, ILogger<HomeController> log) 
         {
-            this._service = service;
+            _service = service;
+            _log = log;
             _emailSettings = emailSettings.Value;
         }
+        
         public IActionResult Index()
 
                 {
@@ -74,6 +73,7 @@ namespace OTITO.Web.Controllers
             }
             return View();
         }
+
         public JsonResult PageStream(int PageNo,string SearchTerm)
         {
             try
@@ -167,7 +167,7 @@ namespace OTITO.Web.Controllers
                             client.Port = _emailSettings.PrimaryPort;
 
                             client.Credentials = new NetworkCredential(_emailSettings.UsernameEmail, _emailSettings.UsernamePassword);
-                            client.EnableSsl = true;
+                            client.EnableSsl = _emailSettings.EnableSsl;
                             client.Send(message);
                         }
                     }
@@ -175,10 +175,10 @@ namespace OTITO.Web.Controllers
                     //send the email
                     _model.sent = true;
                 }
-                catch (Exception ex)
+                catch (SmtpException ex)
                 {
                     TempData["ErrorMessage"] = "There was a problem disputing the source. Please check back later.";
-
+                    _log.LogError(ex, "Failed to send contact email");
                 }
             }
 

@@ -604,6 +604,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+
 <script>
     var app = angular.module('Topic', []);
     app.controller('TopicView', ['$scope','$http','$timeout','$interval','$window',function($scope, $http, $timeout, $interval,$window) {
@@ -756,3 +759,5 @@ input.addEventListener("keyup", function(event) {
         $("."+Id+"-nested").hide();
     }
 </script>
+
+}

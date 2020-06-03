@@ -152,25 +152,24 @@ document.location = "https://www.otito.io/topic/counter/"+pathArray[3];
 </div>
 
 
+@section Scripts {
+    <script>
+        function findClaim() {
+            var criteria = document.getElementById("searchCriteria").value;
+            window.location.href = '/topic/counter/@Model.Slug/' + criteria;
+        }
 
-<script>
-    function findClaim()
-    {
-    var criteria = document.getElementById("searchCriteria").value;
-    window.location.href='/topic/counter/@Model.Slug/'+criteria;
-    }
+        var input = document.getElementById("searchCriteria");
 
-    var input = document.getElementById("searchCriteria");
-
-// Execute a function when the user releases a key on the keyboard
-input.addEventListener("keyup", function(event) {
-  // Number 13 is the "Enter" key on the keyboard
-  if (event.keyCode === 13) {
-    // Cancel the default action, if needed
-    event.preventDefault();
-    // Trigger the button element with a click
-     window.location.href='/topic/counter/@Model.Slug/'+input.value;
-  }
-});
-
-</script>
+        // Execute a function when the user releases a key on the keyboard
+        input.addEventListener("keyup", function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                window.location.href = '/topic/counter/@Model.Slug/' + input.value;
+            }
+        });
+    </script>
+}

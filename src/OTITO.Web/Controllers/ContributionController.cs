@@ -650,7 +650,7 @@ namespace OTITO.Web.Controllers
                             client.Port = _emailSettings.PrimaryPort;
 
                             client.Credentials = new NetworkCredential(_emailSettings.UsernameEmail, _emailSettings.UsernamePassword);
-                            client.EnableSsl = true;
+                            client.EnableSsl = _emailSettings.EnableSsl;
                             client.Send(message);
                         }
                     }

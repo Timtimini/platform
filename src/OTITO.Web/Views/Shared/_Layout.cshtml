@@ -39,7 +39,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
     <meta name="author" content="Afraz">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   
     <meta property="og:image" content="https://www.otito.io/images/responsive_logo.png">
     <link rel="shortcut icon" href="~/images/otito.ico" type="image/x-icon">
     <link rel="icon" href="~/images/otito.ico" type="image/x-icon">
@@ -62,93 +62,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             -webkit-box-shadow: 0px 0px 0px 0px rgba(199,244,225,1) !important;
         }
     </style>
+
     @*òtító | a platform for documenting and sharing truth*@
     <title>@title</title>
 
-    <environment include="Development">
-        <link rel="stylesheet" type="text/css"
-              href="~/css/fonts/fonts.css?v=@Version" />
-        <link href="~/css/bootstrap.min.css?v=@Version" rel="stylesheet">
-        <link href="~/css/nav-bar.css?v=@Version" rel="stylesheet">
-        <link href="~/css/MobileMenu.css?v=@Version" rel="stylesheet">
-        <link href="~/css/custom.css?v=@Version" rel="stylesheet">
-
-        <script src="~/js/jquery-3.3.1.slim.min.js?v=@Version"></script>
-        <script src="~/js/bootstrap.bundle.min.js?v=@Version"></script>
-        @*<script src="~/js/Custom.js"></script>*@
-
-        <script src="~/js/angular.min.js?v=@Version"></script>
-        <script src="~/js/moment.min.js?v=@Version"></script>
-        <script src="~/js/angular-moment.js?v=@Version"></script>
-        <script src="~/js/ui-bootstrap-tpls.js?v=@Version"></script>
-        <script src="~/js/angular-modal-service.js?v=@Version"></script>
-        <script src="~/js/sharer.min.js?v=@Version"></script>
-
-        <!-- Facebook Pixel Code -->
-        <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window,document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2134026646911493');
-fbq('track', 'PageView');
-        </script>
-        <noscript>
-            <img height="1" width="1"
-                 src="https://www.facebook.com/tr?id=2134026646911493&ev=PageView
-&noscript=1" />
-        </noscript>
-        <!-- End Facebook Pixel Code -->
-        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-            <link rel="stylesheet" href="~/css/site.css" />*@
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" type="text/css"
-              href="~/css/fonts/fonts.css?v=@Version" />
-        <link href="~/css/bootstrap.min.css?v=@Version" rel="stylesheet">
-        <link href="~/css/nav-bar.css?v=@Version" rel="stylesheet">
-        <link href="~/css/MobileMenu.css?v=@Version" rel="stylesheet">
-        <link href="~/css/custom.css?v=@Version" rel="stylesheet">
-
-        <script src="~/js/jquery-3.3.1.slim.min.js?v=@Version"></script>
-        <script src="~/js/bootstrap.bundle.min.js?v=@Version"></script>
-        @*<script src="~/js/Custom.js"></script>*@
-
-        <script src="~/js/angular.min.js?v=@Version"></script>
-        <script src="~/js/moment.min.js?v=@Version"></script>
-        <script src="~/js/angular-moment.js?v=@Version"></script>
-        <script src="~/js/ui-bootstrap-tpls.js?v=@Version"></script>
-        <script src="~/js/angular-modal-service.js?v=@Version"></script>
-        <script src="~/js/sharer.min.js?v=@Version"></script>
-
-        <!-- Facebook Pixel Code -->
-        <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window,document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2134026646911493');
-fbq('track', 'PageView');
-        </script>
-        <noscript>
-            <img height="1" width="1"
-                 src="https://www.facebook.com/tr?id=2134026646911493&ev=PageView
-&noscript=1" />
-        </noscript>
-        <!-- End Facebook Pixel Code -->
-        @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-                  asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-                  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-            <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />*@
-    </environment>
+    <link href="/css/vendor.css?v=@Version" rel="stylesheet">
+    <link href="/css/site.css?v=@Version" rel="stylesheet">
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -156,27 +75,6 @@ fbq('track', 'PageView');
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59QJ29P"
                 height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    @*<nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">OTITO.Web</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>*@
 
     <nav class="navbar navbar-expand-lg fixed-top navbar-light noPadding" id="maincontainernav">
         <div class="container navPadding">
@@ -495,19 +393,57 @@ fbq('track', 'PageView');
     @{
         await Html.RenderPartialAsync("_CookieConsentPartial");
     }
-    @{
-        await Html.RenderPartialAsync("_partialResponsive");
-    }
+
+    <link href="/css/fonts/fonts.css?v=@Version" rel="stylesheet">
+<link cd rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="/js/vendor.js?v=@Version"></script>
+    <script src="/js/site.js?v=@Version"></script>
 
     <environment include="Development">
-        @*<script src="~/js/jquery-3.3.1.slim.min.js"></script>
-            <script src="~/js/bootstrap.bundle.min.js"></script>*@
-        <script src="~/js/Custom.js?v=@Version"></script>
-
-        @*<script src="~/lib/jquery/dist/jquery.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-            <script src="~/js/site.js" asp-append-version="true"></script>*@
-
+        <!-- Facebook Pixel Code -->
+        <script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2134026646911493');
+fbq('track', 'PageView');
+        </script>
+        <noscript>
+            <img height="1" width="1"
+                 src="https://www.facebook.com/tr?id=2134026646911493&ev=PageView
+&noscript=1"/>
+        </noscript>
+        <!-- End Facebook Pixel Code -->
+    </environment>
+    <environment exclude="Development">
+        <!-- Facebook Pixel Code -->
+        <script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2134026646911493');
+fbq('track', 'PageView');
+        </script>
+        <noscript>
+            <img height="1" width="1"
+                 src="https://www.facebook.com/tr?id=2134026646911493&ev=PageView
+&noscript=1"/>
+        </noscript>
+        <!-- End Facebook Pixel Code -->
+    </environment>
+    <environment include="Development">
+     
         <!-- Start of HubSpot Embed Code -->
         <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6019738.js"></script>
         <!-- End of HubSpot Embed Code -->
@@ -649,8 +585,7 @@ xhr.send(null);
             <script src="~/js/site.min.js" asp-append-version="true"></script>*@
         @*<script src="~/js/jquery-3.3.1.slim.min.js"></script>
             <script src="~/js/bootstrap.bundle.min.js"></script>*@
-        <script src="~/js/Custom.js?v=@Version"></script>
-
+      
         <!-- Start of HubSpot Embed Code -->
         <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6019738.js"></script>
         <!-- End of HubSpot Embed Code -->

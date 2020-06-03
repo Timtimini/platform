@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  otito-db:
+    image: mysql:5.7.30
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: otito_local_db
+      MYSQL_USER: otito_local_user
+      MYSQL_PASSWORD: otito_local_pass
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+
+  smtp:
+    image: mailhog/mailhog
+    ports:
+      - 8025:8025
+      - 1025:1025
+    healthcheck:
+      test: echo | telnet 127.0.0.1 25

@@ -364,4 +364,10 @@ FodyWeavers.xsd
 ## Our extras
 #################################
 
+appsettings.*.json
+*firebase*.json
+
 .DS_Store
+
+.idea/
+dist/

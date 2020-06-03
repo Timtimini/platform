@@ -2,8 +2,8 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-<link href="~/css/homepage.css?V=2.40" rel="stylesheet">
-<link href="~/css/Animate.css?V=2.17" rel="stylesheet">
+
+<link href="~/css/homepage.css"  rel="stylesheet">
 <div class="container mainContainer" ng-app="Home" ng-controller="stream">
     <style>
         .displaynone{
@@ -407,6 +407,7 @@
 
 </div>
 
+@section Scripts {
 <script type="text/javascript">
     var app = angular.module('Home', ['angularMoment']);
     app.controller('stream', ['$scope','$http','$timeout','moment','$interval','$anchorScroll',function($scope, $http, $timeout,moment,$interval,
@@ -661,3 +662,4 @@ function showSlides(n) {
 }
 </script>
 
+}

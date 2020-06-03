@@ -29,3 +29,23 @@ $ gulp
 $ cd {project root}
 $ dotnet publish OTITO.sln -o dist
 ```
+
+## Infrastructure
+
+```bash
+# website is deployed to 
+/var/www/otito
+
+# nginx config @
+/etc/nginx/sites-available/default
+
+# service config
+/etc/systemd/system/otito.service
+```
+
+systemd cheatsheet
+
+```bash
+$ systemctl status otito
+$ systemctl restart otito
+```

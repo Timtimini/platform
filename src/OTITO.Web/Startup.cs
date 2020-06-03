@@ -13,10 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OTITO.Web.Controllers;
-
 using OTITO_Services;
 using OTITO_Services.Model;
-
 using OTITO.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -41,104 +39,52 @@ namespace OTITO.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.Configure<IdentityOptions>(options =>
-            //{
-            //    // Default User settings.
-            //    options.User.AllowedUserNameCharacters =
-            //            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-            //    options.User.RequireUniqueEmail = true;
 
-            //});
-
-    //        services.AddAuthentication("BasicAuthentication")
-    //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-
-            // configure DI for application services
             services.AddScoped<IUserService, UserService>();
 
-
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseMySQL(Configuration.GetConnectionString("otito")));
 
-            //services.AddIdentity<ApplicationUser, IdentityRole>()
-            //.AddEntityFrameworkStores<ApplicationDbContext>()
-            //.AddDefaultTokenProviders();
-
-            //services.AddDbContext<OtitoDBContext>(options =>
-            //options.UseMySQL(Configuration.GetConnectionString("otito")));
 
             services.AddDbContext<OtitoDBContext>(options =>
-            options.UseMySQL(Configuration.GetConnectionString("otito")));
+                options.UseMySQL(Configuration.GetConnectionString("otito")));
 
-
-            //        services.AddDbContext<IdentityDataContext>(options =>
-            //options.UseMySQL(Configuration.GetConnectionString("otito")));
-
-
-
-
-
-            // Add application services.
-
+            
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //services.AddScoped<DbContext, OtitoDBContext>();
 
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-              services.AddAuthentication(options => {
-                  options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                  options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                  options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-              })
-                    
-                    //.AddTwitter(options =>
-                    //{
-                    //    options.ConsumerKey = "";
-                    //    options.ConsumerSecret = "";
-                    //})
-                    .AddGoogle(options =>
-                    {
-                        options.ClientId = "953290115905-02dopo16f8idrahud135am79hq3i4g94.apps.googleusercontent.com";
-                        options.ClientSecret = "_bCB6cy_Kv5zJx-JlDB2jj4Q";
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
 
-                    })
-                    .AddFacebook(options => {
-                        //options.AppId = "378002696398093";
-                        //options.AppSecret = "e0cece940a5bf61bf6cc9c8e5e89d0e8";
-                        //options.AppId = "695016410913459";
-                        //options.AppSecret = "b882f09acf04118dfcd5244b52c949c9";
 
-                        options.AppId = "378002696398093";
-                        options.AppSecret = "e0cece940a5bf61bf6cc9c8e5e89d0e8";
-
-                        //options.AppId = "695016410913459";
-                        //options.AppSecret = "b882f09acf04118dfcd5244b52c949c9";
-
-                        //options.AppId = "798603490501872";
-                        //options.AppSecret = "0b98199ed4468bf2917a074f1e6b8c07";
-                    })
-                    .AddCookie(options =>
-                    {
-                        options.LoginPath = "/Users/Login/";
-
-                    })
-                    ;
+                .AddGoogle(options =>
+                {
+                    options.ClientId = "953290115905-02dopo16f8idrahud135am79hq3i4g94.apps.googleusercontent.com";
+                    options.ClientSecret = "_bCB6cy_Kv5zJx-JlDB2jj4Q";
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = "378002696398093";
+                    options.AppSecret = "e0cece940a5bf61bf6cc9c8e5e89d0e8";
+                })
+                .AddCookie(options => { options.LoginPath = "/Users/Login/"; });
 
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<ITopicService, TopicService>();
+            services.AddTransient<CleanupPlainTextPasswordsService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 
             services.Configure<RecaptchaSettings>(Configuration.GetSection("RecaptchaSettings"));
             services.AddTransient<IRecaptchaService, RecaptchaService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -155,13 +101,9 @@ namespace OTITO.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            //app.UseForwardedHeaders(new ForwardedHeadersOptions()
-            //{
-            //    ForwardedHeaders = ForwardedHeaders.XForwardedProto
-            //});
+
 
             app.UseCookiePolicy();
-            //app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
@@ -181,15 +123,22 @@ namespace OTITO.Web
             });
 
             app.UseRobotsTxt(builder =>
-        builder
-            .AddSection(section =>
-                section
-                    .AddComment("Allow")
-                    .AddUserAgent("*")
-                    .Allow("/")
-                )
-            .AddSitemap("https://otito.io/sitemap.xml")
-    );
+                builder
+                    .AddSection(section =>
+                        section
+                            .AddComment("Allow")
+                            .AddUserAgent("*")
+                            .Allow("/")
+                    )
+                    .AddSitemap("https://otito.io/sitemap.xml")
+            );
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                // TODO: we can remove this after it's been run but it's not the end of the world if it's still around
+                var cleanup = scope.ServiceProvider.GetService<CleanupPlainTextPasswordsService>();
+                cleanup.Apply();
+            }
         }
     }
 }

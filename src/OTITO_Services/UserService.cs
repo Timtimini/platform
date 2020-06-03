@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
 using OTITO_Services.Model;
 using OTITO_Services.HelperModel.User;
-using Microsoft.EntityFrameworkCore;
 
 namespace OTITO_Services
 {
@@ -19,11 +17,12 @@ namespace OTITO_Services
 
         public User Authenticate(string username, string password)
         {
-            var user = _db.User.SingleOrDefault(x => x.Email == username && x.Password == password
-            );
+            var user = _db.User.SingleOrDefault(x => x.Email.Equals(username));
 
-            // return null if user not found
             if (user == null)
+                return null;
+
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
                 return null;
 
             // authentication successful so return user details without password
@@ -55,16 +54,16 @@ namespace OTITO_Services
 
         public int SaveUser(string username, string password)
         {
-            var exists = _db.User.Where(x => x.Email.Equals(username)).FirstOrDefault();
+            var exists = _db.User.FirstOrDefault(x => x.Email.Equals(username));
             if (exists != null)
             {
                 return -1;
             }
 
-            User user = new User
+            var user = new User
             {
                 Email = username,
-                Password = password,
+                Password = BCrypt.Net.BCrypt.HashPassword(password),
             };
 
             _db.User.Add(user);
@@ -113,15 +112,18 @@ namespace OTITO_Services
 
         public int ChangePassword(string previous, string newPassword, int userId)
         {
-            var user = _db.User.FirstOrDefault(x => x.Id == userId && x.Password == previous);
-            if (user != null)
-            {
-                user.Password = newPassword;
-                _db.SaveChanges();
-                return 1;
-            }
+            var user = _db.User.FirstOrDefault(x => x.Id.Equals(userId));
 
-            return -1;
+            if (user == null)
+                return -1;
+
+            if (!BCrypt.Net.BCrypt.Verify(previous, user.Password))
+                return -1;
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            _db.SaveChanges();
+
+            return 1;
         }
 
         public UserStatistics GetStatistics(DateTime from, DateTime to)

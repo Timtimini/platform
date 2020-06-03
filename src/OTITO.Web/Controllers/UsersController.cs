@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using FirebaseAdmin.Auth;
+using Claim = System.Security.Claims.Claim;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -173,7 +174,13 @@ namespace OTITO.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Signup(UserSignup _user)
         {
-            var recaptcha = await _recaptcha.Validate(Request);
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
+            
+            // Q: Why hacks when reCaptcha v2 has dev keys?
+            // A: https://github.com/TimothyMeadows/reCAPTCHA.AspNetCore/issues/12
+            var recaptcha = env.Equals("Development") 
+                ? new RecaptchaResponse {success = true }
+                : await _recaptcha.Validate(Request);
 
             if (ModelState.IsValid && recaptcha.success)
             {
@@ -189,15 +196,14 @@ namespace OTITO.Web.Controllers
                     {
                         // do the login process;
 
-                        var claims = new List<System.Security.Claims.Claim>
+                        var claims = new List<Claim>
                         {
-                            new System.Security.Claims.Claim(ClaimTypes.Sid, a.ToString()),
-                            new System.Security.Claims.Claim(ClaimTypes.Email, _user.Email),
-                            new System.Security.Claims.Claim(ClaimTypes.Role, "")
+                            new Claim(ClaimTypes.Sid, a.ToString()),
+                            new Claim(ClaimTypes.Email, _user.Email),
+                            new Claim(ClaimTypes.Role, "")
                         };
-                        ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
-                        System.Security.Claims.ClaimsPrincipal principal =
-                            new System.Security.Claims.ClaimsPrincipal(userIdentity);
+                        var userIdentity = new ClaimsIdentity(claims, "login");
+                        var principal = new ClaimsPrincipal(userIdentity);
 
                         await HttpContext.SignInAsync(principal);
                         return Redirect("/");

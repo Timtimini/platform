@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OTITO.Web.Controllers;
 using OTITO_Services;
 using OTITO_Services.Model;
-using OTITO.Web.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using OTITO.Web.Models.Email;
 using reCAPTCHA.AspNetCore;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Authentication.Facebook;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 
@@ -79,7 +67,6 @@ namespace OTITO.Web
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<ITopicService, TopicService>();
-            services.AddTransient<CleanupPlainTextPasswordsService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 
@@ -132,13 +119,6 @@ namespace OTITO.Web
                     )
                     .AddSitemap("https://otito.io/sitemap.xml")
             );
-
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                // TODO: we can remove this after it's been run but it's not the end of the world if it's still around
-                var cleanup = scope.ServiceProvider.GetService<CleanupPlainTextPasswordsService>();
-                cleanup.Apply();
-            }
         }
     }
 }

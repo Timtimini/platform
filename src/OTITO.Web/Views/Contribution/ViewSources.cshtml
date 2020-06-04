@@ -336,10 +336,6 @@
     }
     }
 
-    $scope.gotoURL=function(val)
-    {
-        window.location.href='@Url.Action("TopicSimpleView","Contribution")?TopicId='+val;
-    }
     $scope.Sources = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Claims.FirstOrDefault().Sources)))
     $scope.deleteSource=function(slug)
     {

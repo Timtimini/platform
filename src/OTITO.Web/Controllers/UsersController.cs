@@ -4,12 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
-
-
 using OTITO_Services;
 using OTITO_Services.Model;
-
 using OTITO.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using FirebaseAdmin.Auth;
+using Claim = System.Security.Claims.Claim;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,6 +39,7 @@ namespace OTITO.Web.Controllers
             _userService = userService;
             _recaptcha = recaptcha;
         }
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -52,11 +50,11 @@ namespace OTITO.Web.Controllers
             //"Society's most democratic tool for documenting and sharing objectively verifiable political and socio-cultural truth";
             return View(_user);
         }
+
         [AllowAnonymous]
         [HttpPost]
         public IActionResult Login(BasicUser userParam)
         {
-
             if (ModelState.IsValid)
             {
                 var user = _userService.Authenticate(userParam.Email, userParam.Password);
@@ -67,11 +65,11 @@ namespace OTITO.Web.Controllers
                     {
                         new System.Security.Claims.Claim(ClaimTypes.Sid, user.Id.ToString()),
                         new System.Security.Claims.Claim(ClaimTypes.Email, user.Email),
-                        new System.Security.Claims.Claim(ClaimTypes.Role, user.Role??"")
-
+                        new System.Security.Claims.Claim(ClaimTypes.Role, user.Role ?? "")
                     };
                     ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
-                    System.Security.Claims.ClaimsPrincipal principal = new System.Security.Claims.ClaimsPrincipal(userIdentity);
+                    System.Security.Claims.ClaimsPrincipal principal =
+                        new System.Security.Claims.ClaimsPrincipal(userIdentity);
 
                     HttpContext.SignInAsync(principal);
                     return Redirect("/");
@@ -79,18 +77,16 @@ namespace OTITO.Web.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Wrong credentials.";
-
-
                 }
             }
-            ViewBag.Title = meta.title.Value.ToString();// "òtító | a platform for documenting and sharing truth";
-            ViewBag.Description = meta.description.Value.ToString(); //"Society's most democratic tool for documenting and sharing objectively verifiable political and socio-cultural truth";
+
+            ViewBag.Title = meta.title.Value.ToString(); // "òtító | a platform for documenting and sharing truth";
+            ViewBag.Description =
+                meta.description.Value
+                    .ToString(); //"Society's most democratic tool for documenting and sharing objectively verifiable political and socio-cultural truth";
             return View(userParam);
-
-
-
-
         }
+
         //[AllowAnonymous]
         //public IActionResult Login()
         //{
@@ -103,6 +99,7 @@ namespace OTITO.Web.Controllers
             await HttpContext.SignOutAsync();
             return Redirect("/");
         }
+
         [HttpGet]
         public IActionResult Signup()
         {
@@ -112,27 +109,27 @@ namespace OTITO.Web.Controllers
 
             //"òtító | a platform for documenting and sharing truth";
             ViewBag.Description = meta.description.Value.ToString();
-            
-                //"Society's most democratic tool for documenting and sharing objectively verifiable political and socio-cultural truth";
+
+            //"Society's most democratic tool for documenting and sharing objectively verifiable political and socio-cultural truth";
             return View(user);
         }
 
         public JsonResult IfEmailExist(string Email)
-        { 
+        {
             try
             {
                 bool exists = _userService.IfEmailExist(Email);
-                return Json(new { success = true, exists });
+                return Json(new {success = true, exists});
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return Json(new { success = false, exists=false });
+                return Json(new {success = false, exists = false});
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> LoginWithFacebook(FacebookSignup _signup)
         {
-
             try
             {
                 UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(_signup.uid);
@@ -148,11 +145,11 @@ namespace OTITO.Web.Controllers
                     {
                         new System.Security.Claims.Claim(ClaimTypes.Sid, user.Id.ToString()),
                         new System.Security.Claims.Claim(ClaimTypes.Email, user.Email),
-                        new System.Security.Claims.Claim(ClaimTypes.Role, user.Role??"")
-
+                        new System.Security.Claims.Claim(ClaimTypes.Role, user.Role ?? "")
                     };
                     ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
-                    System.Security.Claims.ClaimsPrincipal principal = new System.Security.Claims.ClaimsPrincipal(userIdentity);
+                    System.Security.Claims.ClaimsPrincipal principal =
+                        new System.Security.Claims.ClaimsPrincipal(userIdentity);
 
                     await HttpContext.SignInAsync(principal);
                     return Redirect("/");
@@ -161,8 +158,6 @@ namespace OTITO.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Wrong credentials.";
                     return Redirect("/Users/Login");
-
-
                 }
             }
             catch (Exception ex)
@@ -177,15 +172,18 @@ namespace OTITO.Web.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Signup(UserSignup _user)
         {
-
-            var recaptcha = await _recaptcha.Validate(Request);
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
+            
+            // Q: Why hacks when reCaptcha v2 has dev keys?
+            // A: https://github.com/TimothyMeadows/reCAPTCHA.AspNetCore/issues/12
+            var recaptcha = env.Equals("Development") 
+                ? new RecaptchaResponse {success = true }
+                : await _recaptcha.Validate(Request);
 
             if (ModelState.IsValid && recaptcha.success)
             {
-
                 try
                 {
                     int a = _userService.SaveUser(_user.Email, _user.Password);
@@ -198,18 +196,17 @@ namespace OTITO.Web.Controllers
                     {
                         // do the login process;
 
-                        var claims = new List<System.Security.Claims.Claim>
-                    {
-                        new System.Security.Claims.Claim(ClaimTypes.Sid, a.ToString()),
-                        new System.Security.Claims.Claim(ClaimTypes.Email, _user.Email),
-                        new System.Security.Claims.Claim(ClaimTypes.Role, "")
-                    };
-                        ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
-                        System.Security.Claims.ClaimsPrincipal principal = new System.Security.Claims.ClaimsPrincipal(userIdentity);
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Sid, a.ToString()),
+                            new Claim(ClaimTypes.Email, _user.Email),
+                            new Claim(ClaimTypes.Role, "")
+                        };
+                        var userIdentity = new ClaimsIdentity(claims, "login");
+                        var principal = new ClaimsPrincipal(userIdentity);
 
                         await HttpContext.SignInAsync(principal);
                         return Redirect("/");
-
                     }
                 }
                 catch
@@ -219,7 +216,6 @@ namespace OTITO.Web.Controllers
                     TempData["ErrorMessage"] = "An unknown error occured!";
                     return View(_user);
                 }
-
             }
             else
             {
@@ -231,13 +227,13 @@ namespace OTITO.Web.Controllers
         }
 
 
-
         [HttpGet]
         public IActionResult Signup_V2()
         {
             UserSignup user = new UserSignup();
             return View(user);
         }
+
         [HttpPost]
         [ValidateGoogleCaptcha]
         public IActionResult Signup_V2(UserSignup _user)
@@ -246,7 +242,6 @@ namespace OTITO.Web.Controllers
 
             if (ModelState.IsValid && recaptcha.IsCompletedSuccessfully)
             {
-
                 try
                 {
                     int a = _userService.SaveUser(_user.Email, _user.Password);
@@ -260,17 +255,17 @@ namespace OTITO.Web.Controllers
                         // do the login process;
 
                         var claims = new List<System.Security.Claims.Claim>
-                    {
-                        new System.Security.Claims.Claim(ClaimTypes.Sid, a.ToString()),
-                        new System.Security.Claims.Claim(ClaimTypes.Email, _user.Email),
-                        new System.Security.Claims.Claim(ClaimTypes.Role, "")
-                    };
+                        {
+                            new System.Security.Claims.Claim(ClaimTypes.Sid, a.ToString()),
+                            new System.Security.Claims.Claim(ClaimTypes.Email, _user.Email),
+                            new System.Security.Claims.Claim(ClaimTypes.Role, "")
+                        };
                         ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
-                        System.Security.Claims.ClaimsPrincipal principal = new System.Security.Claims.ClaimsPrincipal(userIdentity);
+                        System.Security.Claims.ClaimsPrincipal principal =
+                            new System.Security.Claims.ClaimsPrincipal(userIdentity);
 
                         HttpContext.SignInAsync(principal);
                         return Redirect("/");
-
                     }
                 }
                 catch
@@ -278,7 +273,6 @@ namespace OTITO.Web.Controllers
                     TempData["ErrorMessage"] = "An unknown error occured!";
                     return View(_user);
                 }
-
             }
             else
             {
@@ -287,7 +281,6 @@ namespace OTITO.Web.Controllers
                 return View(_user);
             }
         }
-
 
 
         [Authorize]
@@ -301,15 +294,15 @@ namespace OTITO.Web.Controllers
                 _user.Id = user.Id;
                 _user.IsSocial = user.IsSocial;
                 _user.Name = user.Name;
-                double positive = user.TotalVote == 0 ? 0 : (double)user.PositiveKarma / (double)(user.TotalVote);
-                double negative = user.TotalVote == 0 ? 0 : (double)user.NegativeKarma / (double)(user.TotalVote);
+                double positive = user.TotalVote == 0 ? 0 : (double) user.PositiveKarma / (double) (user.TotalVote);
+                double negative = user.TotalVote == 0 ? 0 : (double) user.NegativeKarma / (double) (user.TotalVote);
                 _user.PositiveKarma = positive * 100;
                 _user.NegativeKarma = negative * 100;
 
                 _user.Activity = user.activity.Select(x => new UserProfileActivity
                 {
                     ClaimId = x.ClaimId,
-                    Title = x.activity_type+" "+x.activity_title,
+                    Title = x.activity_type + " " + x.activity_title,
                     TopicId = x.TopicId,
 
                     URL = x.ClaimId == 0 ? "/topic/counter/" + x.TopicSlug : "/topic/sources/" + x.ClaimSlug,
@@ -319,28 +312,37 @@ namespace OTITO.Web.Controllers
             {
                 TempData["ErrorMessage"] = "An error occured while fetching details";
             }
+
             ViewBag.Title = meta.title.Value.ToString();
             ViewBag.Description = meta.description.Value.ToString();
             return View(_user);
         }
+
         [Authorize]
         public JsonResult ChangePassword([FromBody] ChangePassword _password)
         {
             var UserId = User.FindFirst(ClaimTypes.Sid).Value;
             try
             {
-                int result = _userService.ChangePassword(_password.PreviousPassword, _password.NewPassword, Convert.ToInt32(UserId));
+                int result = _userService.ChangePassword(_password.PreviousPassword, _password.NewPassword,
+                    Convert.ToInt32(UserId));
                 if (result == 1)
-                    return Json(new { success = true, message = "Your password has been changed successfully." });
+                    return Json(new {success = true, message = "Your password has been changed successfully."});
                 else
-                    return Json(new { success = false, message = "Old Password seems to be wrong. Please use correct password." });
+                    return Json(new
+                        {success = false, message = "Old Password seems to be wrong. Please use correct password."});
             }
             catch
-            { }
+            {
+            }
 
-            return Json(new { success = false, message = "Unable to change your password due to a server error. Please check back later." });
-
+            return Json(new
+            {
+                success = false,
+                message = "Unable to change your password due to a server error. Please check back later."
+            });
         }
+
         public IActionResult ChangePasswordModal()
         {
             return PartialView();
@@ -349,9 +351,8 @@ namespace OTITO.Web.Controllers
         [Authorize]
         public IActionResult Statistics(UserStatisticsModel model)
         {
-
             if (ModelState.IsValid)
-            { 
+            {
                 try
                 {
                     var Role = User.FindFirst(ClaimTypes.Role).Value;
@@ -367,51 +368,38 @@ namespace OTITO.Web.Controllers
                         model.NoOfVotes = result.NoOfVotes;
                         model.hasData = true;
                     }
-                        
-
                 }
                 catch (Exception ex)
                 {
                     TempData["ErrorMessage"] = "An error occured while fetching your result. Please contact admin.";
                 }
-
             }
 
             return View(model);
         }
+
         [Authorize]
         public IActionResult UserList()
         {
-            try
-            {
-                var result = _userService.UserList();
-                var stream = new MemoryStream();
-                var writeFile = new StreamWriter(stream);
-                CsvWriter csv = new CsvWriter();
+            var result = _userService.UserList();
+            var stream = new MemoryStream();
+            var writeFile = new StreamWriter(stream);
+            CsvWriter csv = new CsvWriter();
 
-                var Users = (from user in result
-                                       select new object[]
-                                       {
-                                            user
-                                       }).ToList();
-
-                // Build the file content
-                var UserCSV = new StringBuilder();
-                Users.ForEach(line =>
+            var Users = (from user in result
+                select new object[]
                 {
-                    UserCSV.AppendLine(string.Join(",", line));
-                });
+                    user
+                }).ToList();
 
-                byte[] buffer = Encoding.ASCII.GetBytes($"{UserCSV.ToString()}");
-                return File(buffer, "text/csv", $"Users.csv");
+            // Build the file content
+            var UserCSV = new StringBuilder();
+            Users.ForEach(line => { UserCSV.AppendLine(string.Join(",", line)); });
 
-            }
-            catch (Exception ex)
-            {
-                return View();
-            }
-
+            byte[] buffer = Encoding.ASCII.GetBytes($"{UserCSV.ToString()}");
+            return File(buffer, "text/csv", $"Users.csv");
         }
+
         public IActionResult testProfile()
         {
             var UserEmail = User.FindFirst(ClaimTypes.Email).Value;
@@ -420,7 +408,7 @@ namespace OTITO.Web.Controllers
             HttpContext.SignOutAsync();
             try
             {
-                var user = _userService.AuthenticateSocial(UserEmail, firstName.Value,lastName.Value);
+                var user = _userService.AuthenticateSocial(UserEmail, firstName.Value, lastName.Value);
 
                 if (user != null)
                 {
@@ -428,11 +416,11 @@ namespace OTITO.Web.Controllers
                     {
                         new System.Security.Claims.Claim(ClaimTypes.Sid, user.Id.ToString()),
                         new System.Security.Claims.Claim(ClaimTypes.Email, user.Email),
-                        new System.Security.Claims.Claim(ClaimTypes.Role, user.Role??"")
-
+                        new System.Security.Claims.Claim(ClaimTypes.Role, user.Role ?? "")
                     };
                     ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
-                    System.Security.Claims.ClaimsPrincipal principal = new System.Security.Claims.ClaimsPrincipal(userIdentity);
+                    System.Security.Claims.ClaimsPrincipal principal =
+                        new System.Security.Claims.ClaimsPrincipal(userIdentity);
 
                     HttpContext.SignInAsync(principal);
                     return Redirect("/");
@@ -441,11 +429,9 @@ namespace OTITO.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Wrong credentials.";
                     return Redirect("/Users/Login");
-
-
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Redirect("/Users/Login");
             }
@@ -458,14 +444,9 @@ namespace OTITO.Web.Controllers
             //return View(vm);
         }
 
-
-
-        [Route("signin")]
-        public IActionResult SignIn() => View();
-
         [Route("signin/{provider}")]
         public IActionResult SignIn(string provider, string returnUrl = null) =>
-            Challenge(new AuthenticationProperties { RedirectUri = returnUrl ?? "/Users/testProfile" }, provider);
+            Challenge(new AuthenticationProperties {RedirectUri = returnUrl ?? "/Users/testProfile"}, provider);
 
         [Route("signout")]
         [HttpPost]
@@ -474,6 +455,5 @@ namespace OTITO.Web.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
-
     }
 }

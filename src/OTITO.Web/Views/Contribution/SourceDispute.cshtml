@@ -166,9 +166,7 @@
     var app = angular.module('Sources', []);
 app.controller('ViewSources', ['$scope', '$http', '$timeout', '$interval', function($scope, $http, $timeout, $interval) {
     $scope.new_source = '';
-    $scope.gotoURL = function(val) {
-        window.location.href = '@Url.Action("TopicSimpleView","Contribution")?TopicId=' + val;
-    }
+
     $scope.Sources = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Claims.FirstOrDefault().Sources)))
     $scope.deleteSource = function(Id) {
         window.location.href = '@Url.Action("DeleteSource")?TopicId=@Model.Id&ClaimId=@Model.Claims.FirstOrDefault().Id&SourceId=' + Id;

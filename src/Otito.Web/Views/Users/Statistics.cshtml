@@ -1,0 +1,91 @@
+﻿@model Otito.Web.Models.User.UserStatisticsModel
+<style>
+    .row.list :nth-child(even) {
+        background-color: #dcdcdc;
+    }
+
+    .row.list :nth-child(odd) {
+        /* background-color: #aaaaaa;*/
+    }
+</style>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<div class="container mainContainer" style="width:70%;margin-top:100px;" ng-app="User" ng-controller="Profile">
+    <form action="" method="post">
+        <div class="row">
+            <div class="col-lg-3">
+                Date From:
+            </div>
+            <div class="col-lg-3">
+
+                <input asp-for="formData.DateFrom" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                Date To:
+            </div>
+            <div class="col-lg-3">
+                <input asp-for="formData.DateTo" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                <br />
+                <button style="float:right;" class="btn btn-success" type="submit">Search</button>
+            </div>
+        </div>
+
+    </form>
+    @if (Model.hasData==true)
+    {
+        <div class="row list" style="margin-top:50px;">
+            <div class="col-lg-3">
+                Total Users(All Time):
+            </div>
+            <div class="col-lg-3">
+                @Model.NoOfUsers
+            </div>
+            <div class="col-lg-3">
+                Total Topics:
+            </div>
+            <div class="col-lg-3">
+                @Model.NoOfTopics
+            </div>
+        </div>
+        <div class="row list" style="margin-top:50px;">
+            <div class="col-lg-3">
+                Total Claims:
+            </div>
+            <div class="col-lg-3">
+                @Model.NoOfClaims
+            </div>
+            <div class="col-lg-3">
+                Total Sources:
+            </div>
+            <div class="col-lg-3">
+                @Model.NoOfSources
+            </div>
+        </div>
+        <div class="row list" style="margin-top:50px;">
+            <div class="col-lg-3">
+                Total Votes:
+            </div>
+            <div class="col-lg-3">
+                @Model.NoOfVotes
+            </div>
+            <div class="col-lg-3">
+
+            </div>
+            <div class="col-lg-3">
+                <a href="@Url.Action("UserList")">Download Emails as CSV</a>
+            </div>
+        </div>
+    }
+
+
+</div>
+
+@section Scripts{
+    <script>
+          $(function() {
+                $( "#formData_DateFrom, #formData_DateTo" ).datepicker();
+          });
+    </script> 
+}

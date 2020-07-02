@@ -1,0 +1,665 @@
+﻿@model Otito.Web.Models.Topic.HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<link href="~/css/homepage.css"  rel="stylesheet">
+<div class="container mainContainer" ng-app="Home" ng-controller="stream">
+    <style>
+        .displaynone{
+            display:none;
+        }
+        .displayblock{
+            display:block !important;
+        }
+    </style>
+    @*<div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#000;opacity:0.5;"
+             ng-show="processing">
+        </div>
+        <div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;"
+             ng-show="processing">
+
+            <div class="spinner-border" style="width: 3rem; height: 3rem; position:absolute;top:50%;left:50%; " role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+        <h1 class="mainHeading col-lg-8">
+            Learn the facts about important issues, while contributing evidence to fight misinformation.
+            <br />
+            <span style="font-size:22px;font-weight:normal;font-family:'Avenir LT Std 65 Medium';">Politics | Culture | Science | History | Life</span>
+        </h1>*@
+
+    <div class="slideshow-container mobileSlides">
+
+        <div class="mobileSlide fade">
+
+            <div class="row ">
+
+                <div class="col-lg-6 slideHeadingCont">
+                    <h1 class="slideHeading
+                animated bounce delay-1s
+            ">
+                        The new media format that <span>combats misinformation</span>
+
+                    </h1>
+                    <div class="imageRightAnim dispImgMobile">
+                        <img src="~/images/topic_claims_mobile.jpg" width="65%" />
+                    </div>
+
+                    <p class="leftText">
+                        òtító’s articles are organised based on <span>factual evidence</span> and <span>trustworthiness</span> of sources.
+
+                    </p>
+                    <div style="margin:0px auto; text-align:center;">
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20'"
+                        >How it Works</button>
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='#trending_topics'"
+                        >View Topics</button>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mobileSlide fade">
+
+            <div class="row ">
+
+                <div class="col-lg-6 slideHeadingContRight">
+                    <h1 class="slideHeading animated bounce delay-1s">Read articles organised into <span>claims</span> or <span>statements of fact</span></h1>
+
+                    <div class="imageRightAnim dispImgMobile">
+                        <img src="~/images/topic_claims_expanded_mobile.jpg" width="65%" />
+                    </div>
+
+                    <p class="leftText">
+                        A claim is a fact-based assertion, supported by at least one source. All claims are submitted by users like you.
+
+                    </p>
+                    <div style="margin:0px auto; text-align:center;">
+
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='#trending_topics'"
+                        >View Topics</button>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mobileSlide fade" id="highSlide">
+            <div class="row ">
+
+                <div class="col-lg-6 slideHeadingCont">
+                    <h1 class="slideHeading animated bounce delay-1s">
+                        <span>Vote</span> to hide <span>unsupported claims</span> and amplify trustworthy ones
+
+                    </h1>
+
+                    <div class="imageRightAnim dispImgMobile">
+                        <img src="~/images/topic_claim_source_mobile.jpg" width="65%" />
+                    </div>
+
+                    <p class="leftText">
+                        Upvote sources that support the assertions in a claim and downvote (or dispute) those that don’t.
+
+
+                    </p>
+                    <div style="margin:0px auto; text-align:center;">
+
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='#trending_topics'"
+                        >View Topics</button>
+                    </div>
+
+
+                </div> 
+            </div>
+        </div>
+        <div class="mobileSlide fade" >
+            <div class="row ">
+
+                <div class="col-lg-6 slideHeadingContRight">
+                    <h1 class="slideHeading animated bounce delay-1s">
+                        <span>Claim designations</span> reveal the reliability of every assertion
+                    </h1>
+                     <div class="imageRightAnim dispImgMobile">
+                        <img src="~/images/des_mobile.jpg" width="65%" />
+                    </div>
+                    <p class="leftText">
+                        Every claim carries a designation that signals trustworthiness—"<span>most validated</span>" (MV), “<span>less validated</span>”  (LV) or “<span>unchallenged claim</span>” (UC).
+
+                    </p>
+                    <div style="margin:0px auto; text-align:center;">
+
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='#trending_topics'"
+                        >View Topics</button>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="slideshow-container desktopSlides">
+
+        <div class="mySlides fade">
+
+            <div class="row " id="firstSlide">
+                <div class="col-lg-6 slideHeadingCont">
+                    <h1 class="slideHeading
+                animated bounce delay-1s
+            ">
+                        The new media format that <span>combats misinformation</span>
+                    </h1>
+                    <p class="leftText">
+                        òtító’s articles are organised based on <span>factual evidence</span> and <span>trustworthiness</span> of sources.
+                    </p>
+                    <div style="padding-left:20px">
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='/topic/this-is-an-example-topic-ie-an-issue-or-question-to-be-discussed-click-me-7aaf3a0b20'"
+                        >How it Works</button>
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='#trending_topics'"
+                        >View Topics</button>
+                    </div>
+                </div>
+                <div class="col-lg-6 imageRightAnim slideImgDesk">
+                    <img src="~/images/topic_claims.jpg" class="slideImageRight" width="100%" />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mySlides fade">
+
+            <div class="row ">
+                <div class="col-lg-6 imageLeftAnim">
+                    <img src="~/images/topic_claims_expanded.jpg" class="slideImageRight" width="100%" />
+                </div>
+                <div class="col-lg-6 slideHeadingContRight">
+                    <h1 class="slideHeading animated bounce delay-1s">Read articles organised into <span>claims</span> or <span>statements of fact</span></h1>
+                    <p class="leftText">
+                        A claim is a fact-based assertion, supported by at least one source. All claims are submitted by users like you.
+
+                    </p>
+                    <div style="padding-left: 20px">
+
+                        <button class="btn btn-default grdBtn"
+                                 onclick="window.location.href='#trending_topics'"
+                        >View Topics</button>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mySlides fade">
+            <div class="row ">
+
+                <div class="col-lg-6 slideHeadingCont">
+                    <h1 class="slideHeading animated bounce delay-1s">
+                        <span>Vote</span> to hide <span>unsupported claims</span> and amplify trustworthy ones
+
+                    </h1>
+                    <p class="leftText">
+                        Upvote sources that support the assertions in a claim and downvote (or dispute) those that don’t.
+
+
+                    </p>
+                    <div style="padding-left: 20px">
+
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='#trending_topics'"
+                        >View Topics</button>
+                    </div>
+
+
+                </div>
+                <div class="col-lg-6 imageRightAnim ">
+                    <img src="~/images/topic_claim_source.jpg" class="slideImageRight" width="100%" />
+                </div>
+            </div>
+        </div>
+        <div class="mySlides fade">
+            <div class="row ">
+                <div class="col-lg-6 imageLeftAnim">
+                    <img src="~/images/des.jpg" class="slideImageRight" width="100%" />
+                </div>
+                <div class="col-lg-6 slideHeadingContRight">
+                    <h1 class="slideHeading animated bounce delay-1s">
+                        <span>Claim designations</span> reveal the reliability of every assertion
+                    </h1>
+                    <p class="leftText">
+                        Every claim carries a designation that signals trustworthiness—"<span>most validated</span>" (MV), “<span>less validated</span>”  (LV) or “<span>unchallenged claim</span>” (UC).
+
+                    </p>
+                    <div style="padding-left: 20px">
+
+                        <button class="btn btn-default grdBtn"
+                                onclick="window.location.href='#trending_topics'"
+                        >View Topics</button>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <br>
+
+    <div style="text-align:center" class="desktopSlidesFooter">
+        <img src="~/images/arrow-left-car.svg" width="40" height="40" style="display: inline-block; vertical-align: middle; margin-top: -10px;cursor:pointer"
+             onclick="minusSlides()"
+          />
+        <span class="paginated" onclick="currentSlide(1)"></span>
+        <span class="paginated" onclick="currentSlide(2)"></span>
+        <span class="paginated" onclick="currentSlide(3)"></span>
+        <span class="paginated" onclick="currentSlide(4)"></span>
+        <img src="~/images/arrow-right-car.svg" width="40" height="40" style="display: inline-block;vertical-align:middle;margin-top:-10px;cursor:pointer;"
+             onclick="plusSlides()"
+          />
+    </div>
+
+    <div style="text-align: center;" class="mobileSlidesFooter">
+        <img src="~/images/arrow-left-car.svg" width="40" height="40" style="display: inline-block; vertical-align: middle; margin-top: -10px;cursor:pointer;"
+             onclick="minusSlidesMobile()"
+          />
+        <span class="paginated mp" onclick="currentSlideM(1)"></span>
+        <span class="paginated mp" onclick="currentSlideM(2)"></span>
+        <span class="paginated mp" onclick="currentSlideM(3)"></span>
+        <span class="paginated mp" onclick="currentSlideM(4)"></span>
+        <img src="~/images/arrow-right-car.svg" width="40" height="40" style="display: inline-block;vertical-align:middle;margin-top:-10px;cursor:pointer;"
+             onclick="plusSlidesMobile()"
+          />
+
+    </div>
+
+    <div class="clearFix"></div>
+
+    @*<div style="height:100px;"></div>*@
+
+    <a id="trending_topics"></a>
+    <div class="row" style="margin-left:8px;">
+        <h1 class="trending_topics le_home_alignment">
+            Trending Topics
+            <div class="bottom_line_main_heading"></div>
+        </h1>
+    </div>
+    <div class="row">
+        <p class="searchInstruction le_home_alignment">Search for keywords in topic titles or scroll through the topics feed</p>
+    </div>
+    <div class="row">
+        <div class="searchmain col-lg-5 searchBarAlign">
+            <input type="text" my-enter="searchMore()" ng-model="SearchTerm" placeholder="Search for topics you care about…" class="searchinput desktopInputSearch" />
+            <input type="text" my-enter="searchMore()" ng-model="SearchTerm" placeholder="Search..." class="searchinput mobileInputSearch" />
+            <img ng-click="searchMore()" src="~/images/magnifier.svg" width="25" class="searchicon" id="searchTopic" />
+            <div style="clear: both"></div>
+        </div>
+    </div>
+
+    <div class="row topicRow">
+        @*@foreach (var item in Model.Topics)
+            {
+                <div class="col-lg-4 topicEle" onclick="window.location.href='@Url.Action("TopicSimpleView","Contribution")?TopicId=@item.Id'">
+                    <div class="topic @item.GradientName gradient">
+
+                        <div>
+                            <h1>@item.TopicName</h1>
+                            <p class="when">
+
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            }*@
+
+        @*| amSubtract : '1' : 'hours' | amDateFormat : 'hh'*@
+        <div style="margin: 20px; color: red; border: 1px solid red;display:none; width: 100%; padding: 30px;"
+
+             ng-class="{displayblock: stream.length == 0, displaynone: stream.length >0}"
+             ng-show="stream.length==0">
+            No one’s created a topic on this subject yet. You should <a href="/topic/addtopic">add a topic</a> and help the world get informed!
+
+        </div>
+        <div class="col-lg-4 topicEle" ng-repeat="x in stream">
+
+
+            <div class="topic {{x.GradientName}} gradient mobileTopic" ng-click="gotoURLMobile(x.Slug)">
+                <img ng-show="x.isSticky==true" src="~/images/push-pin.svg" width="30" class="pinnedPost" />
+                <div>
+                    <h1>{{x.TopicName}}</h1>
+                    <p class="when" ng-show="x.DateUpdated">
+                        Updated: {{x.DateUpdated | fromNow}}
+                    </p>
+
+                    <p class="when">
+                        {{x.DateCreated | fromNow}}
+
+                    </p>
+                </div>
+
+            </div>
+            <div class="topic {{x.GradientName}} gradient desktopTopic" ng-click="gotoURL(x.Slug)">
+                <img ng-show="x.isSticky==true" src="~/images/push-pin.svg" width="30" class="pinnedPost" />
+                <div>
+                    <h1>{{x.TopicName}}</h1>
+                    <p class="when" ng-show="x.DateUpdated">
+                        Updated: {{x.DateUpdated | fromNow}}
+                    </p>
+                    <p class="when">
+                        <span ng-show="x.DateCreated">Created:</span> {{x.DateCreated | fromNow}}
+
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        @*<div class="col-lg-4 topicEle">
+                <div class="topic orca_topic gradient">
+
+                    <div>
+                        <h1> Is global warming influenced by human activities?</h1>
+                        <p class="when">
+                            Today
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-4 topicEle">
+                <div class="topic green_topic gradient">
+
+                    <div>
+                        <h1> Is global warming influenced by human activities?</h1>
+                        <p class="when">
+                            Today
+                        </p>
+                    </div>
+
+                </div>
+            </div>*@
+    </div>
+    <div class="more-container" ng-show="stream.length>0">
+        <span ng-click="bringMore()" style="cursor:pointer;" class="more-topics">More Topics</span>
+    </div>
+
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    var app = angular.module('Home', ['angularMoment']);
+    app.controller('stream', ['$scope','$http','$timeout','moment','$interval','$anchorScroll',function($scope, $http, $timeout,moment,$interval,
+    $anchorScroll
+    ) {
+    $scope.processing=false;
+    $scope.exampleDate = moment().toDate();
+    $scope.PageNo=2;
+    $scope.SearchTerm='';
+    $scope.gotoURL=function(val)
+    {
+        window.location.href='/topic/'+val;
+    }
+    $scope.gotoURLMobile=function(val)
+    {
+        window.location.href='/topic/'+val;
+    }
+
+        $scope.stream = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Topics)))
+
+    $scope.bringMore=function()
+    {
+
+
+    $http({
+        url: '@Url.Action("PageStream")?PageNo='+$scope.PageNo+'&SearchTerm=',
+        method: "GET"
+    })
+    .then(function(response) {
+
+
+    $scope.PageNo=$scope.PageNo+1;
+    for(var i=0;i<response.data.data.topics.length;i++)
+    {
+        $scope.stream.push({Id:response.data.data.topics[i].id, TopicName:response.data.data.topics[i].topicName,
+        GradientName:response.data.data.topics[i].gradientName,
+        DateCreated:response.data.data.topics[i].dateCreated,
+        Claims:response.data.data.topics[i].claims,
+        Slug:response.data.data.topics[i].slug,
+        });
+    }
+    console.log($scope.stream);
+    },
+    function(response) { // optional
+
+
+    });
+
+
+    }
+
+
+
+    $scope.searchMore=function()
+    {
+    $scope.PageNo=1;
+    $scope.processing=true;
+    $http({
+        url: '@Url.Action("PageStream")?PageNo='+$scope.PageNo+'&SearchTerm='+$scope.SearchTerm,
+        method: "GET"
+    })
+    .then(function(response) {
+
+
+    $scope.PageNo=$scope.PageNo+1;
+    $scope.stream=[];
+    for(var i=0;i<response.data.data.topics.length;i++)
+    {
+        $scope.stream.push({Id:response.data.data.topics[i].id, TopicName:response.data.data.topics[i].topicName,
+        GradientName:response.data.data.topics[i].gradientName,
+        DateCreated:response.data.data.topics[i].dateCreated,
+        Claims:response.data.data.topics[i].claims,
+        Slug:response.data.data.topics[i].slug,
+        });
+
+
+    }
+    console.log($scope.stream);
+    console.log('brought');
+    $scope.processing=false;
+    $anchorScroll('trending_topics');
+
+    },
+    function(response) { // optional
+
+
+    });
+
+
+    }
+
+
+    }]);
+    app.directive('myEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if (event.which === 13) {
+                scope.$apply(function () {
+                    scope.$eval(attrs.myEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+
+
+    app.filter('fromNow', function () {
+      return function (dateValue) {
+        //return moment(dateValue, "YYYY-MM-DDTHH:mm:ss").locale('en').fromNow();
+        return dateValue? moment.utc(dateValue).local().fromNow():"";
+      };
+});
+     function gcd (a, b) {
+            return (b == 0) ? a : gcd (b, a%b);
+        }
+    var slideIndex = 1;
+    $(document).ready(function(){
+    $(window).resize(function(){
+
+        var w = $( window ).width();
+
+    if(w<992)
+    {
+    $(".desktopSlides").css("display","none");
+    $(".mobileSlides").css("display","block");
+        //var h = $( window ).height();
+    var h = $(".mobileSlide:nth-child("+slideIndex+")").height();
+    $(".mobileSlides").css("height",h+60);
+    showSlidesMobile(slideIndex);
+
+    @*setInterval(function(){
+        showSlidesMobile(slideIndex += slideIndex)
+    },2000)*@
+
+    }
+    else
+    {
+
+    $(".desktopSlides").css("display","block");
+    $(".mobileSlides").css("display","none");
+
+
+
+    var height = $(".mySlides:nth-child("+slideIndex+") .row").height();
+        console.log(height);
+    $(".desktopSlides").css("height",height+40);
+
+        showSlides(slideIndex);
+    }
+
+     });
+    var w = $( window ).width();
+
+
+    if(w<992)
+    {
+    $(".mobileSlides").css("display","block");
+    $(".desktopSlides").css("display","none");
+        //var h = screen.height;
+        var h = $(".mobileSlide:nth-child("+slideIndex+")").height();
+    $(".mobileSlides").css("height",h+60);
+    showSlidesMobile(slideIndex);
+
+    @*setInterval(function(){
+        showSlidesMobile(slideIndex += slideIndex)
+    },2000)*@
+
+    }
+    else
+    {
+
+    $(".mobileSlides").css("display","none");
+    $(".desktopSlides").css("display","block");
+        setTimeout(function(){
+    //var height = $(window).height();
+    console.log(slideIndex)
+        var height = $(".mySlides:nth-child("+slideIndex+") .row").height();
+
+        $(".desktopSlides").css("height",height+40);
+        },100)
+        @*var height = $(window).height();
+        //var height = $(".mySlides .row").height();
+    console.log(height + " height of the slide");
+        $(".mySlides").css("height",height+40);*@
+        showSlides(slideIndex);
+    }
+
+
+    })
+
+
+
+function plusSlides() {
+  showSlides(slideIndex += 1);
+}
+    function minusSlides()
+    {
+        showSlides(slideIndex-=1);
+    }
+function plusSlidesMobile()
+    {
+    showSlidesMobile(slideIndex+=1)
+    }
+ function minusSlidesMobile()
+    {
+    showSlidesMobile(slideIndex-=1)
+    }
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+function currentSlideM(n)
+    {
+    showSlidesMobile(slideIndex=n);
+    }
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("paginated");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+}
+
+ function showSlidesMobile(n) {
+  var i;
+  var slides = document.getElementsByClassName("mobileSlide");
+  var dots = document.getElementsByClassName("mp");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+
+    @*setTimeout(function(){
+    showSlidesMobile(slideIndex+=n);
+    }, 5000);*@
+}
+</script>
+
+}

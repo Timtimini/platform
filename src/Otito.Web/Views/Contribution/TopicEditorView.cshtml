@@ -1,0 +1,757 @@
+﻿@model Otito.Web.Models.Topic.TopicViewModel
+@using System.Security.Claims;
+@{
+    bool admin = User.Identity.IsAuthenticated && User.FindFirst(ClaimTypes.Role).Value.ToString().ToLower().Equals("admin");
+    string SourceIds = "";
+}
+<style>
+    .hideKarma {
+        display: none;
+    }
+
+    .amin {
+        color: white;
+        background: rgba(69,104,220,1);
+        background: -moz-linear-gradient(45deg, rgba(69,104,220,1) 0%, rgba(176,106,179,1) 100%);
+        background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(69,104,220,1)), color-stop(100%, rgba(176,106,179,1)));
+        background: -webkit-linear-gradient(45deg, rgba(69,104,220,1) 0%, rgba(176,106,179,1) 100%);
+        background: -o-linear-gradient(45deg, rgba(69,104,220,1) 0%, rgba(176,106,179,1) 100%);
+        background: -ms-linear-gradient(45deg, rgba(69,104,220,1) 0%, rgba(176,106,179,1) 100%);
+        background: linear-gradient(45deg, rgba(69,104,220,1) 0%, rgba(176,106,179,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4568dc', endColorstr='#b06ab3', GradientType=1 );
+    }
+
+    .btn-white {
+        border: 2px solid #FFFFFF;
+        outline: none !important;
+        color: #FFFFFF;
+    }
+
+    .noShadow {
+        box-shadow: 0px 0px 0px 0px rgba(199,244,225,1) !important;
+        -webkit-box-shadow: 0px 0px 0px 0px rgba(199,244,225,1) !important;
+    }
+</style>
+<div class="stickyHeader">
+    <div class="container">
+
+
+        <button class="btn btn-default mr-20 addClaimbtn" onclick="window.location.href='@Url.Action("addclaim")'">
+            Add Claim
+        </button>
+        <button class="btn btn-default mr-20" onclick="window.location.href='@Url.Action("SolicitEvidenceTopic")'">
+            Share
+        </button>
+
+        <span class="searchRow">
+            <input type="text" value="@Model.search" id="searchCriteria" style="height:43px;" />
+            <button type="button" class="btn btn-success"
+                    onclick="findClaim()">
+                Search
+            </button>
+        </span>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Published: @Model.DateCreated.ToString("dd") @Model.DateCreated.ToString("MMMM") @Model.DateCreated.ToString("yyyy")
+        @Model.DateCreated.ToString("hh:mm tt")
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Total Contributors: @Model.Contributors
+        <span style="float:right;padding-top:10px;"></span>
+    </div>
+</div>
+<div class="container mainContainer" ng-app="Topic" ng-controller="TopicView">
+    <button class="addClaimFloating btn btn-success btn-lg" onclick="window.location.href='@Url.Action("addclaim")'">
+        Add a Claim
+    </button>
+    <h1 class="trending_topics">
+
+
+        @if (admin)
+    {
+        <button class="btn btn-danger" onclick="window.location.href='@Url.Action("DeleteTopic")'">
+            <i class="fa fa-times-circle"
+               onclick=""></i>
+
+            Delete Topic
+        </button>
+        @if(!Model.isSticky)
+        {
+        <button class="btn btn-info" onclick="window.location.href='/topic/addsticky/@Model.Slug'">
+
+            Add Sticky
+        </button>
+        }
+
+        @if(Model.isSticky)
+        {
+        <button class="btn btn-info" onclick="window.location.href='/topic/removesticky/@Model.Slug'">
+            <i class="fa fa-times-circle"
+               onclick=""></i>
+
+            Remove Sticky
+        </button>
+        }
+
+
+
+}
+
+        @Model.TopicName
+    </h1>
+    @*<button class="btn btn-default mr-20 simpleViewbtn" onclick="window.location.href='@Url.Action("simple")'">
+            Simple View
+        </button>*@
+    @*<button class="btn btn-success mr-20 showCounterClaimbtn">
+            Show Counterclaims
+        </button>*@
+    @*<div class="row button-row">
+
+            <button class="btn btn-default mr-20 addClaimbtn" onclick="window.location.href='@Url.Action("addclaim")'">
+                Add Claim
+            </button>
+
+            <button class="btn btn-default mr-20" onclick="window.location.href='@Url.Action("SolicitEvidenceTopic")'">
+                Share
+            </button>
+
+
+        </div>
+        <div class="row button-row searchRow">
+
+            <input type="text" value="@Model.search" id="searchCriteria" />
+            <button type="button" class="btn btn-success"
+                    onclick="findClaim()">
+                Search
+            </button>
+        </div>*@
+    @{var c = 0; var interstitial = 0; var vCount = 0;}
+
+    @if (!string.IsNullOrEmpty(Model.search) && Model.Claims.Count == 0)
+    {
+        <div class="row delegate">
+            <div class="col-lg-12" style="        border: 2px solid red;
+        color: red;
+        padding: 20px;">
+                No one’s created a claim on this subject yet. You should <a href="@Url.Action("addclaim")">add a claim</a> and help the world get informed!
+            </div>
+        </div>
+    }
+
+
+    @foreach (var item in Model.Claims)
+    {
+        <div class="row claim-row hideAndShow @((item.TotalVotes>=500 && item.KarmaPercent>=90)?"hideKarma":"")" style=" ">
+            <div class="col-lg-2 right-border">
+
+
+                @if (item.Status == 2)
+                {
+                    <span class="m_claimTitle">
+                        <span>Unchallenged Claim</span>
+                    </span>
+
+                    <button class="btn round-button tip d_claimTitle">
+                        <span>
+                            UC
+                            <span class="tooltiptext">Unchallenged Claim</span>
+                        </span>
+                    </button><br>
+                }
+                else
+                {
+                    <span class="m_claimTitle">
+                        <span>Most Validated</span>
+                    </span>
+                    <button class="btn round-button tip d_claimTitle">
+                        <span>
+                            MV
+                            <span class="tooltiptext">Most Validated</span>
+                        </span>
+                    </button><br>
+                }
+
+                <span class="claim">Claim</span>
+            </div>
+            <div class="col-lg-10 claim_head_cont">
+                @if (c == 0)
+                {
+                    <h1 class="claim_head">
+                        @item.ClaimTitle
+                        <div class="showInlineExpand">
+                            <img src="~/images/down_large_arrow.svg?version=2" width="30"
+                                 class="showDescription" id="down-m-@item.Id" onclick="showMobileHelp(@item.Id)"
+                                 style="@(vCount<6?"display:none;":"display:block;")"
+                                 height="30" style="display:block;" />
+                            <img src="~/images/up_large_arrow.svg?version=2" width="30"
+                                 class="showDescription" id="up-m-@item.Id" style="@(vCount<6?"display:block;":"display:none;")"
+                                 onclick="showMobileHelp(@item.Id)"
+                                 height="30" />
+                        </div>
+                    </h1>
+                }
+                else
+                {
+                    <h2 class="claim_head">
+                        @item.ClaimTitle
+                        <div class="showInlineExpand">
+                            <img src="~/images/down_large_arrow.svg?version=2" width="30"
+                                 class="showDescription" id="down-m-@item.Id" onclick="showMobileHelp(@item.Id)"
+                                 style="@(vCount<6?"display:none;":"display:block;")"
+                                 height="30" />
+                            <img src="~/images/up_large_arrow.svg?version=2" width="30"
+                                 class="showDescription" id="up-m-@item.Id" style="@(vCount<6?"display:block;":"display:none;")"
+                                 onclick="showMobileHelp(@item.Id)"
+                                 height="30" />
+                        </div>
+                    </h2>
+                }
+
+                <div class="expandClaim" style="position: absolute;
+        right: -19px;
+        top: -21px;
+        cursor: pointer">
+                    <img src="~/images/down_large_arrow.svg" width="30"
+                         class="showDescription" id="down-@item.Id" onclick="showHelp(@item.Id)"
+                         style="@(vCount<6?"display:none;":"display:block;")"
+                         height="30" />
+                    <img src="~/images/up_large_arrow.svg" width="30"
+                         class="showDescription" id="up-@item.Id" style="@(vCount<6?"display:block;":"display:none;")" onclick="showHelp(@item.Id)"
+                         height="30" />
+                </div>
+                <p class="help-text delegate" style="margin-left: 0px;@(vCount<6?"display: block;":"display:none;")" id="help-@item.Id">
+                    @item.ClaimDescription
+                </p>
+                <h1 class="source_cont_head">
+                    <span class="pointer"></span> Top Source
+                </h1>
+                <div class="row mt-10">
+                    @{
+                        var index = 0;
+                    }
+
+                    <div class="clearFix"></div>
+                    @foreach (var s in item.Sources)
+                    {
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-2 ">
+                                    <div class="source_round inlineMfloat {{@index%2==0?'source_orange':'source_blue'}}" style="flex-direction:column">
+
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <img src="~/images/arrow_up.svg" width="20" style="margin-bottom:2px;cursor:pointer;"
+                                                 ng-click="addVote(1,@item.Id,@s.Id)" />
+                                            <div id="vote-@s.Id">@s.Vote</div>
+                                            <img src="~/images/arrow_down.svg" style="cursor:pointer;"
+                                                 ng-click="addVote(-1,@item.Id,@s.Id)"
+                                                 width="20" />
+                                        }
+                                        else
+                                        {
+                                            <img data-toggle="modal" data-target="#alertModal"
+                                                 src="~/images/arrow_up.svg" width="20" style="margin-bottom:2px;cursor:pointer;opacity:0.5;" />
+                                            <div id="vote-@s.Id">@s.Vote</div>
+                                            <img src="~/images/arrow_down.svg" style="cursor:pointer;opacity:0.5;"
+                                                 data-toggle="modal" data-target="#alertModal"
+                                                 width="20" />
+                                        }
+
+
+                                    </div>
+                                    <p class="source_text inlineM" style="overflow-x: auto; white-space: nowrap; height: 42px;">
+                                        <a href="#" ng-click="getFullURL('@s.URL');$event.preventDefault();"> @s.URL </a>
+                                    </p>
+
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="source_karma">
+                                        <div class="source_positive_karma tip" id="pkarma-@s.Id" style="width:@s.PositiveKarma%">
+                                            <span class="tooltiptext">
+                                                Positive karma of source submitter. The higher this is, the more reliable their sources have proven to be.
+                                            </span>
+                                        </div>
+                                        <div class="source_negative_karma tip" id="nkarma-@s.Id" style="width:@s.NegativeKarma%">
+
+                                            <span class="tooltiptext">
+                                                Negative karma of source submitter. The higher this is, the more unreliable their sources have proven to be.
+                                            </span>
+                                        </div>
+                                        <div class="clearFix"></div>
+                                    </div>
+                                    <h1 class="source_name">
+                                        @if (admin)
+                                        {
+                                            <button class="btn btn-default" ng-click="deleteSource(@s.Slug)">
+                                                <i class="fa fa-times-circle"
+                                                   onclick=""></i>
+
+                                                Delete Source
+                                            </button>
+
+                                        }
+
+                                    </h1>
+                                    <p class="source_text col-lg-12 outlineMainurl" style="overflow-x:auto;white-space:nowrap;height:42px;">
+                                        <a href="#" ng-click="getFullURL('@s.URL');$event.preventDefault();"> @s.URL </a>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <button class="btn btn-info showAllSources btn-showall-desktop" style="height:40px;" onclick="window.location.href='/topic/sources/@(item.Slug)'">
+                            All Sources
+                        </button>
+                        index = index + 1;
+                        SourceIds = SourceIds + "," + s.Id;
+                    }
+
+
+
+
+                </div>
+                <h1 class="source_cont_head mt-20 contribute_head">
+                    <span class="pointer"></span> Contribute
+                </h1>
+                <button class="btn btn-info showAllSources btn-showall-mobile" style="height:40px;" onclick="window.location.href='/topic/sources/@(item.Slug)'">
+                    All Sources
+                </button>
+                <button class="btn btn-default mr-20" onclick="window.location.href='/topic/addclaim/@Model.Slug/@item.Guid'">
+                    Add Counter Claim
+                </button>
+
+                <button class="btn btn-default mr-20 shareClaim" onclick="window.location.href='@Url.Action("SolicitEvidenceTopic")'">
+                    Share
+                </button>
+
+                @if (admin)
+                {
+                    <button class="btn btn-danger" onclick="window.location.href='/topic/deleteclaim/@item.Slug'">
+                        <i class="fa fa-times-circle"
+                           onclick=""></i>
+
+                        Delete Claim
+                    </button>
+                }
+            </div>
+            @foreach (var i in item.CounterClaims)
+            {
+                <div class="row claim-row claim-row-counter nestedClaim @item.Id @(i.TotalVotes>=500 && i.KarmaPercent>=90? "hideKarma":"")">
+                    <div class="col-lg-2 right-border">
+                        <span class="m_claimTitle">
+                            <span>Less Validated</span>
+                        </span>
+                        <button class="btn round-button tip d_claimTitle">
+
+                            LV
+                            <span class="tooltiptext">Less Validated</span>
+                        </button><br>
+                        <span class="claim">Claim</span>
+                    </div>
+                    <div class="col-lg-10 claim_head_cont">
+                        <h1 class="claim_head" style="        width: 100%;
+        min-height: 40px;">
+                            @i.ClaimTitle
+
+                            <div class="showInlineExpand">
+                                <img src="~/images/down_large_arrow.svg?version=2" width="30"
+                                     class="showDescription" id="down-m-counter@(i.Id)" onclick="showMobileHelp('counter@(i.Id)')"
+                                     height="30" />
+                                <img src="~/images/up_large_arrow.svg" width="30"
+                                     class="showDescription" id="up-m-counter@(i.Id)" style="display: none;" onclick="showMobileHelp('counter@(i.Id)')"
+                                     height="30" />
+                            </div>
+                        </h1>
+
+                        <div class="expandClaim" style="position: absolute;
+        right: -19px;
+        top: -21px;
+        cursor: pointer">
+                            <img src="~/images/down_large_arrow.svg?version=2" width="30"
+                                 class="showDescription" id="down-counter@(i.Id)" onclick="showHelp('counter@(i.Id)')"
+                                 height="30" />
+                            <img src="~/images/up_large_arrow.svg?version=2" width="30"
+                                 class="showDescription" id="up-counter@(i.Id)"
+                                 style="display:none;"
+                                 onclick="showHelp('counter@(i.Id)')"
+                                 height="30" />
+                        </div>
+                        <p class="help-text delegate" style="margin-left: 0px; display:none;" id="help-counter@(i.Id)">
+                            @i.ClaimDescription
+                        </p>
+                        <h1 class="source_cont_head">
+                            <span class="pointer"></span> Top Source
+                        </h1>
+                        <div class="row mt-10">
+                            @{
+                                var j = 0;
+                            }
+
+                            <div class="clearFix"></div>
+                            @foreach (var sv in i.Sources)
+                            {
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <div class="col-lg-2 ">
+                                            <div class="source_round inlineMfloat {{@j%2==0?'source_orange':'source_blue'}}" style="flex-direction:column">
+
+                                                @if (User.Identity.IsAuthenticated)
+                                                {
+                                                    <img src="~/images/arrow_up.svg" width="20" style="margin-bottom:2px;cursor:pointer;"
+                                                         ng-click="addVote(1,@i.Id,@sv.Id)" />
+                                                    <div id="vote-@sv.Id">@sv.Vote</div>
+                                                    <img src="~/images/arrow_down.svg" style="cursor:pointer;"
+                                                         ng-click="addVote(-1,@i.Id,@sv.Id)"
+                                                         width="20" />
+                                                }
+                                                else
+                                                {
+                                                    <img data-toggle="modal" data-target="#alertModal"
+                                                         src="~/images/arrow_up.svg" width="20" style="margin-bottom:2px;cursor:pointer;opacity:0.5;" />
+                                                    <div id="vote-@sv.Id">@sv.Vote</div>
+                                                    <img src="~/images/arrow_down.svg" style="cursor:pointer;opacity:0.5;"
+                                                         data-toggle="modal" data-target="#alertModal"
+                                                         width="20" />
+                                                }
+
+
+                                            </div>
+                                            <p class="source_text inlineM" style="overflow-x: auto; white-space: nowrap; height: 42px;">
+                                                <a href="#" ng-click="getFullURL('@sv.URL');$event.preventDefault();"> @sv.URL</a>
+                                            </p>
+
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <div class="source_karma">
+                                                <div class="source_positive_karma tip" id="pkarma-@sv.Id" style="width:@sv.PositiveKarma%">
+                                                    <span class="tooltiptext">
+                                                        Positive karma of source submitter. The higher this is, the more reliable their sources have proven to be.
+                                                    </span>
+                                                </div>
+                                                <div class="source_negative_karma tip" id="nkarma-@sv.Id" style="width:@sv.NegativeKarma%">
+
+                                                    <span class="tooltiptext">
+                                                        Negative karma of source submitter. The higher this is, the more unreliable their sources have proven to be.
+                                                    </span>
+                                                </div>
+                                                <div class="clearFix"></div>
+                                            </div>
+                                            <h1 class="source_name">
+                                                @if (admin)
+                                                {
+                                                    <button class="btn btn-default" ng-click="deleteSource(@sv.Slug)">
+                                                        <i class="fa fa-times-circle"
+                                                           onclick=""></i>
+
+                                                        Delete Source
+                                                    </button>
+
+                                                }
+
+                                            </h1>
+                                            <p class="source_text col-lg-12 outlineMainurl" style="overflow-x:auto;white-space:nowrap;height:42px;">
+                                                <a href="#" ng-click="getFullURL('@sv.URL');$event.preventDefault();"> @sv.URL</a>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <button class="btn btn-info showAllSources btn-showall-desktop" style="height:40px;" onclick="window.location.href='/topic/sources/@(i.Slug)'">
+                                    All Sources
+                                </button>
+                                j = j + 1;
+                                SourceIds = SourceIds + "," + sv.Id;
+                            }
+
+
+
+
+                        </div>
+                        <h1 class="source_cont_head mt-20 contribute_head">
+                            <span class="pointer"></span> Contribute
+                        </h1>
+                        <button class="btn btn-info showAllSources btn-showall-mobile" style="height:40px;" onclick="window.location.href='/topic/sources/@(i.Slug)'">
+                            All Sources
+                        </button>
+                        <button class="btn btn-default mr-20 shareClaim" onclick="window.location.href='@Url.Action("SolicitEvidenceTopic")'">
+                            Share
+                        </button>
+                        @*<button class="btn btn-info mr-20" onclick="window.location.href='/topic/sources/@(i.Slug)'">
+                                Show Sources
+                            </button>*@
+                        @if (admin)
+                        {
+                            <button class="btn btn-danger" onclick="window.location.href='/topic/deleteclaim/@i.Slug'">
+                                <i class="fa fa-times-circle"
+                                   onclick=""></i>
+
+                                Delete Claim
+                            </button>
+                        }
+                    </div>
+                </div>
+
+
+            }
+            @{
+                var nestedHidden = item.CounterClaims.Where(x => x.KarmaPercent >= 90 && x.TotalVotes >= 500).Any();
+            }
+
+
+            <div class="row claim-row @item.Id-nested" style="@(nestedHidden?"":"display:none")">
+                <div class="col-lg-6" style="        margin: 0px auto;">
+                    <h3 style="        font-family: 'Avenir LT Std 95 Black';">This claim is hidden because òtító users don't think it's trustworthy</h3>
+                    <p style="        font-family: 'Avenir LT Std 45 Book';">You can still view the claim, as well as vote on and contribute to its sources—simply click the button below. However, be aware that this claim may contain controversial, offensive, deceptive or otherwise unpleasant information.</p>
+
+                    <button class="btn btn-default" style="        margin: 0px auto;" onclick="nestedClaimReveal(@item.Id)">
+                        REVEAL CLAIM
+                    </button>
+                </div>
+
+            </div>
+
+
+        </div>
+        if ((interstitial == 4 || (Model.Claims.Count > 0 && Model.Claims.Count < 5 && (Model.Claims.Count - 1) == interstitial))
+                    && !User.Identity.IsAuthenticated
+                    )
+        {
+            interstitial = 0;
+            <div class="row claim-row amin">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="mobileIconInterstitial">
+                            <img src="~/images/logo_grey.png" style="width: 100%;border-radius: 100%;" />
+                        </div>
+
+                        <div class="col-lg-10 mTech" style="padding-top:20px;">
+                            <h3 style="font-family: 'Avenir LT Std 95 Black';">The fight against misinformation needs a hero like you.</h3>
+                            <p style="font-family: 'Avenir LT Std 45 Book';">
+                                Add your views to this topic by signing up. You’ll also be able to add or vote on sources, and start new topics. Because if you don’t fight misinformation, who will?
+                            </p>
+                            <span class="mobileInterstitialBtn">
+                                <img src="/images/google_icon_white.svg" width="20" height="20" style="margin-right: 10px;">
+                                <img src="/images/facebok_icon_white.svg" width="20" height="20" style="margin-right: 10px;">
+                                <img src="/images/email.svg" width="25" height="17" style="margin-right: 10px;">
+                            </span>
+
+                            <a href="#" data-toggle="modal" data-target="#joinModal" class="btn btn-success noShadow mobileInterstitialBtn">
+
+                                Signup or Login
+                            </a>
+                            <a href="/signin/Google" class="btn btn-google noShadow desktopInterstitialBtns">
+
+                                <img src="/images/google_icon_white.svg" width="20" height="20" style="margin-right: 10px;">
+                                Sign up or log in with Google
+                            </a>
+                            <a href="#" onclick="loginWithFacebook(event)" class="btn btn-facebook  noShadow desktopInterstitialBtns">
+                                <img src="/images/facebok_icon_white.svg" width="20" height="20" style="margin-right: 10px;">
+                                Sign up or log in with Facebook
+                            </a>
+                            <a href="#" data-toggle="modal" data-target="#joinModal" class="btn btn-success noShadow desktopInterstitialBtns">
+                                <img src="/images/email.svg" width="25" height="17" style="margin-right: 10px;">
+                                Sign up or log in with Email
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+        interstitial = interstitial + 1;
+        c = c + 1;
+        vCount = vCount + 1;
+
+    }
+
+
+
+    @{
+        var hasHidden = Model.Claims.Where(x => x.KarmaPercent >= 90 && x.TotalVotes >= 500).Any();
+    }
+    <div class="row claim-row" id="showHideClaim" style="@(hasHidden?"":"display:none")">
+        <div class="col-lg-6" style="        margin: 0px auto;">
+            <h3 style="        font-family: 'Avenir LT Std 95 Black';">This claim is hidden because òtító users don't think it's trustworthy</h3>
+            <p style="        font-family: 'Avenir LT Std 45 Book';">You can still view the claim, as well as vote on and contribute to its sources—simply click the button below. However, be aware that this claim may contain controversial, offensive, deceptive or otherwise unpleasant information.</p>
+
+            <button class="btn btn-default" style="margin: 0px auto;" id="revealClaim">
+                REVEAL CLAIM
+            </button>
+        </div>
+
+    </div>
+
+</div>
+<div class="modal" id="alertModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Alert</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Please sign up or log in by clicking “JOIN” in the navigation bar, to vote and add topics or claims.
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+<script>
+    var app = angular.module('Topic', []);
+    app.controller('TopicView', ['$scope','$http','$timeout','$interval','$window',function($scope, $http, $timeout, $interval,$window) {
+    $scope.new_source='';
+
+    $scope.getFullURL=function(val)
+    {
+
+    var http= val.indexOf("http://");
+    var https= val.indexOf("https://");
+
+    if(http===0 || https===0)
+    {
+    $window.open(val, '_blank');
+    }
+    else
+    {
+    $window.open("http://"+val, '_blank');
+    }
+
+
+    }
+
+    $scope.help_3=false;
+    $scope.hgt = { height: 0 + 'px' };
+    $scope.showHelp_3=function()
+    {
+        $scope.help_3=$scope.help_3==true?false:true;
+    if($scope.help_3)
+    {
+    $scope.hgt = { height: 244 + 'px' };
+    }
+    else
+    {
+    $scope.hgt = { height: 0 + 'px' };
+    }
+    }
+
+
+    $scope.AddDispute=function(Id)
+    {
+        window.location.href='/topic/dispute/'+Id;
+    }
+    $scope.addVote=function(val,claimId, Id)
+    {
+
+    $scope.processing=true;
+        $http({
+        url: '@Url.Action("AddVote")?TopicId=@Model.Id&ClaimId='+claimId+'&SourceId='+Id+'&Vote='+val,
+        method: "GET"
+    })
+    .then(function(response) {
+        console.log(response);
+        $scope.processing=false;
+
+    if(response.data.success)
+    {
+        var source = $scope.Sources.filter(x=>x.Id==Id)[0];
+        source.Vote=response.data.vote;
+        document.getElementById("vote-"+source.Id).innerHTML=source.Vote;
+
+    }
+    else
+    {
+        alert(response.data.message);
+    }
+
+
+    },
+    function(response) { // optional
+            // failed
+    $scope.processing=false;
+    alert('Unable to post the data at the moment. Please try again later.');
+    });
+    }
+
+    $interval(function(){
+
+    if(@(SourceIds.Length)>0)
+
+    $http({
+        url: '@Url.Action("GetSourceVotes")?SourceIds=@(SourceIds.Length>0?SourceIds.Substring(1, SourceIds.Length-1):"")',
+        method: "GET"
+    })
+    .then(function(response) {
+
+
+
+    for(var i=0;i<response.data.data.length;i++)
+
+    {
+
+        @*var source = $scope.Sources.filter(x=>x.Id==$scope.Sources[i].Id)[0];
+        source.Vote=response.data.data[i].vote;
+        source.PositiveKarma=response.data.data[i].Positivekarma;
+        source.NegativeKarma=response.data.data[i].NegativeKarma;*@
+        document.getElementById("vote-"+response.data.data[i].sourceId).innerHTML=response.data.data[i].vote;
+        document.getElementById("pkarma-"+response.data.data[i].sourceId).style.width=response.data.data[i].Positivekarma+"px";
+        document.getElementById("nkarma-"+response.data.data[i].sourceId).style.width=response.data.data[i].NegativeKarma+"px";
+
+
+    }
+
+
+    },
+    function(response) { // optional
+
+
+    });
+
+  },3000);
+
+
+
+
+
+    }]);
+    function findClaim()
+    {
+    var criteria = document.getElementById("searchCriteria").value;
+    window.location.href='/topic/counter/@Model.Slug/'+criteria;
+    }
+
+    var input = document.getElementById("searchCriteria");
+
+// Execute a function when the user releases a key on the keyboard
+input.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+     window.location.href='/topic/counter/@Model.Slug/'+input.value;
+  }
+});
+    $("#revealClaim").click(function(){
+        //alert('hi')
+        $(".hideAndShow").removeClass("hideKarma");
+        $("#showHideClaim").hide();
+    })
+    function nestedClaimReveal(Id)
+    {
+        $("."+Id).removeClass("hideKarma");
+        $("."+Id+"-nested").hide();
+    }
+</script>
+
+}

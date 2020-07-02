@@ -5,6 +5,7 @@
 }
 @using Microsoft.Extensions.Options
 @using reCAPTCHA.AspNetCore
+@using reCAPTCHA.AspNetCore.Templates
 @model OTITO.Web.Models.Authentication.UserSignup
 @inject IOptions<RecaptchaSettings> RecaptchaSettings
 
@@ -43,7 +44,7 @@
                 @Html.ValidationMessageFor(x => x.ConfirmPassword)
             </div>
 
-            @Html.Recaptcha(RecaptchaSettings.Value)
+            @(Html.Recaptcha<RecaptchaV2Checkbox>(RecaptchaSettings.Value))
 
             <div class="row delegate">
                 <div class="col-lg-10">

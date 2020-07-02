@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,7 @@ using OTITO.Web.Models.Email;
 using reCAPTCHA.AspNetCore;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Microsoft.Extensions.Hosting;
 
 namespace OTITO.Web
 {
@@ -20,29 +21,28 @@ namespace OTITO.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile("openotito-firebase-adminsdk-9fhtt-26f125a701.json"),
+            });
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddScoped<IUserService, UserService>();
-
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
-
-
-            services.AddDbContext<OtitoDBContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("otito")));
-
+            services.AddControllersWithViews();
             
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITestService, TestService>();
+            services.AddScoped<IHomeService, HomeService>();
+            services.AddScoped<ITopicService, TopicService>();
+            services.AddTransient<IRecaptchaService, RecaptchaService>();
 
+            var connectionString = Configuration.GetConnectionString("otito");
+            services.AddDbContext<OtitoDBContext>(o => o.UseMySQL(connectionString));
 
             services.AddAuthentication(options =>
                 {
@@ -50,8 +50,6 @@ namespace OTITO.Web
                     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
-
-
                 .AddGoogle(options =>
                 {
                     options.ClientId = "953290115905-02dopo16f8idrahud135am79hq3i4g94.apps.googleusercontent.com";
@@ -64,20 +62,20 @@ namespace OTITO.Web
                 })
                 .AddCookie(options => { options.LoginPath = "/Users/Login/"; });
 
-            services.AddScoped<ITestService, TestService>();
-            services.AddScoped<IHomeService, HomeService>();
-            services.AddScoped<ITopicService, TopicService>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<RecaptchaSettings>(Configuration.GetSection("RecaptchaSettings"));
-            services.AddTransient<IRecaptchaService, RecaptchaService>();
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -88,26 +86,15 @@ namespace OTITO.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            
+            app.UseRouting();
 
-
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseCookiePolicy();
-
             app.UseStaticFiles();
 
-
             app.UseStatusCodePagesWithReExecute("/error/{0}");
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            FirebaseApp.Create(new AppOptions()
-            {
-                Credential = GoogleCredential.FromFile("openotito-firebase-adminsdk-9fhtt-26f125a701.json"),
-            });
 
             app.UseRobotsTxt(builder =>
                 builder
@@ -119,6 +106,17 @@ namespace OTITO.Web
                     )
                     .AddSitemap("https://otito.io/sitemap.xml")
             );
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+            
+
+
         }
     }
 }

@@ -32,8 +32,7 @@ namespace OTITO.Web.Controllers
         }
         
         public IActionResult Index()
-
-                {
+        {
             ViewBag.Title = meta.title.Value;
             ViewBag.Description =meta.description.Value.ToString();
             //"Society's most democratic tool for documenting and sharing objectively verifiable political and socio-cultural truth";

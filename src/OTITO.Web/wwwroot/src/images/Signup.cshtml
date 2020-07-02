@@ -5,6 +5,7 @@
 }
 @using Microsoft.Extensions.Options
 @using reCAPTCHA.AspNetCore
+@using reCAPTCHA.AspNetCore.Versions
 @inject IOptions<RecaptchaSettings> RecaptchaSettings
 @model OTITO.Web.Models.Authentication.UserSignup
 <form method="post" action="@Url.Action("Signup", "Users")">
@@ -41,7 +42,7 @@
 
 
             <div style="margin-left:20px">
-                @Html.Recaptcha(RecaptchaSettings.Value)
+                @(Html.Recaptcha<RecaptchaV2Checkbox>(RecaptchaSettings.Value))
             </div>
             <div class="row delegate" style="color:red;font-size:14px;">
                 @(Model.ValidCaptcha==false?"Invalid Captcha":"")
